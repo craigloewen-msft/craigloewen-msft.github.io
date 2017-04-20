@@ -95,8 +95,22 @@ a {
   object-fit: contain;
 }
 
-.vcenter {
-  
+.main-page-text {
+   float: none;
+   display: table-cell;
+   border:3px solid red;
+}
+
+.main-page-picture {
+   float: none;
+   display: table-cell;
+   border:3px solid blue;
+}
+
+.main-page-row {
+  display: table;
+  margin-bottom:20px;
+  border:3px solid green;
 }
 
 .et-hero-tabs,
