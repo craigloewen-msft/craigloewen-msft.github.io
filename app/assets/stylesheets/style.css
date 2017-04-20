@@ -6,6 +6,44 @@ a {
   text-decoration: none;
 }
 
+
+.fa {
+    width: 250px;
+    height:45px;
+    text-align: center;
+    text-decoration: none;
+}
+
+/* Add a hover effect if you want */
+.fa:hover {
+    opacity: 0.7;
+}
+
+/* Set a specific color for each brand */
+
+/* Facebook */
+.fa-linkedin {
+    background: #0077B5;
+    color: white;
+}
+
+.fa-github {
+    background: #4078c0;
+    color: white;
+}
+
+/* Twitter */
+.fa-envelope {
+    background: #00a1f1;
+    color: white;
+}
+
+
+
+
+
+
+
 .et-header {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -48,14 +86,17 @@ a {
   color: #000;
 }
 
-.vcenter {
-    margin-top: 40vh;
-}
-
 
 .mainpicture {
   width:100%;
+  height:100%;
+  max-height: 70vh;
   max-width: 70vh;
+  object-fit: contain;
+}
+
+.vcenter {
+  margin-top: 30vh;
 }
 
 .et-hero-tabs,
