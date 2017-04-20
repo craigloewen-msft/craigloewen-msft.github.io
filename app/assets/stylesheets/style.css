@@ -95,6 +95,14 @@ a {
   object-fit: contain;
 }
 
+hr {
+  border: 0;
+  clear:both;
+  display:block;
+  width: 96%;               
+  background-color:#CCC;
+  height: 1px;
+}
 
 
 .main-page-text {
