@@ -19,11 +19,11 @@
   <section class="et-hero-tabs">
     <div class="container-fluid">
       <div class="row">
-        <div class="col-sm-6 vcenter">
+        <div class="col-md-6 vcenter">
           <h1>CRAIG LOEWEN</h1>
           <p>University of Waterloo Mechatronics Engineering Student</p>
         </div>
-        <div class="col-sm-6">
+        <div class="col-md-6">
           <img src="/images/main_photo.jpg" class="mainpicture"></img>
         </div>
       </div>
@@ -45,14 +45,14 @@
       <div class="container-fluid">
         <div class="row">
 
-          <div class="col-sm-7">
+          <div class="col-md-7">
             <h1></br>About me</h1></br></br>
             My name's Craig Loewen, I study Mechatronics Engineering at the University of Waterloo. I pride myself in being a cross-discipline problem solver. I've worked in a wide range of industries, from automotive to software, and have a wide range of skills from development to management. I enjoy designing, creating, and leaving things better from where I found them. </br></br>
             I have a strong desire for excellence. This shows through my hard work as I am ranked 1st in my class of 140+ students in one of the most competitive engineering programs in Canada. I enjoy inspiring others through teamwork, and as president of the Waterloo Weightlifting & Fitness Club I am able to push people to realize their fitness goals. </br></br>
             I'm a South African Canadian, and have lived in Europe, Africa, and Canada. My main hobbies are weight lifting, camping and hiking.</p> <br/>
             <button type="button" class="btn btn-primary" onclick="location.href = '/Craig_Loewen_Resume.pdf';">My Resume</button>
           </div>
-          <div class="col-sm-5">
+          <div class="col-md-5">
             <img src="/images/about_me.jpg" class="mainpicture"></img>
           </div>
         </div>
@@ -122,11 +122,11 @@
 
     <div class="container-fluid">
       <div class="row">
-        <div class="col-sm-6">
+        <div class="col-md-6">
           <h2>Check That Your Form Is Correct With Personalized Advice</h2> 
           <p>Spot me’s goal is to be used during a workout. With that in mind, it has a built in Set Feature. This allows you to complete your exercise, and then go back and analyze your skeletal positions for each rep, including the advice from Spot Me on how to improve your form. Or if you want to experiment and see what is good or bad form, use the continuous mode for a continuous analysis of your skeleton.</p>
         </div>
-        <div class="col-sm-6">
+        <div class="col-md-6">
           <img src="/images/usingspotme.gif" class="mainpicture"></img>
         </div>
       </div><!-- row -->
@@ -134,22 +134,22 @@
     </br>
 
     <div class="row">
-      <div class="col-sm-6">
+      <div class="col-md-6">
         <img src="/images/spotmecontinuous.gif" class="mainpicture"></img>
       </div>
-      <div class="col-sm-6">
+      <div class="col-md-6">
         <h2>Spot Me Learns Your Form</h2>
         <p>First, Spot Me uses the Kinect’s API to read in the Skeleton Data from the user. It loads, and modifies this data into a usable format. The data is fed into a Support Vector Machine (SVM), with a linear kernel. This was chosen as with the high degree of dimensions, the data is generally linearly separable. The SVM classifies the skeleton’s position into what kind of form it is, and outputs the appropriate message. Through continuing use of the application, which adds more training data, the SVM will build a better picture of the user’s form, and output more accurate and reliable data. </p>
       </div>
     </div><!-- row -->
   </br>
   <div class="row">
-    <div class="col-sm-6">
+    <div class="col-md-6">
       <h2>Coming Soon to Xbox</h2>
       <p>Microsoft has stated they will soon release the skeleton streaming capabilities to the Universal Windows Platform. Spot Me can then be migrated over to a UWP application, and can be used on any Kinect enabled Xbox. The user interface and program structure is already set up for the port. Sign up with your email address at the top of this page to be notified when Spot Me comes to Xbox! </br> 
        Spot Me already has a full application design, which you can see below, thanks to the graphic designer Patrick Piechnick! To learn more about him click here. </p>
      </div>
-     <div class="col-sm-6">
+     <div class="col-md-6">
       <img src="/images/spotmeUWP.gif" class="mainpicture"></img>
     </div>
   </div><!-- row -->
@@ -162,22 +162,22 @@
   <br/>
   <div class="container-fluid">
     <div class="row">
-      <div class="col-sm-6">
+      <div class="col-md-6">
         <img src="/images/neuralnetwork.gif" class="mainpicture"></img>
         <br/> The Brain behind a successful bird. Purple indicates positive, and light blue indicates negative
       </div>
-      <div class="col-sm-6">
+      <div class="col-md-6">
         <img src="/images/learningai.gif" class="mainpicture"></img>
         <br/>Showing the evolution of the computer's brain 
       </div>
     </div>
     <br/>
     <div class="row">
-      <div class="col-sm-6">
+      <div class="col-md-6">
         <h2>Development</h2> <br/>
         The point of this project was to make a computer learn how to play a game, effectively. I was able to develop a neural network using C++ that evolved using a genetic algorithm. The 'fittest' birds will reproduce the most, and these are the ones that jump through the most obstacles. The brain works by feeding in several inputs (seen above) and the neural network produces an output which will tell the bird to flap or not. After some experimentation I found one layer of six nodes worked best on creating a bird that was quick to learn.
       </div>
-      <div class="col-sm-6">
+      <div class="col-md-6">
         <h2>An explanation of neural networks and genetic algorithms</h2><br/>
         In a simple manner, neural networks are a way of approximating how neurons function in your brain. Each neuron adds the values of the neurons before it based on a given weight, The last neuron is the output neuron, indicating when the bird should flap. So in short, each neuron's weight is how much the brain cares about that specific input, (so speed, distance to obstacle top, etc.) which allows the brain to make complex actions. <br/><br/>
         These weights are modified after all the birds have failed. The one that moved the farthest is the most likely to reproduce. This process follows the biological process in nature. Two bird brains are chosen, and they have a chance where their 'chromosomes', which are their associated weights in the network, are crossed over to form a child. This child also has a chance to have a slight mutation, which will slightly change a weight.
@@ -199,17 +199,17 @@
 
   <div class="container-fluid">
     <div class="row">
-      <div class="col-sm-6">
+      <div class="col-md-6">
         QUADCOPTER DESIGN<br/>
         My goal for this project was to build and program my own quadcopter. I used an Arduino, a chip that senses orientation, and motors to create my own flying remote controlled drone. It used a PID controller, and hardware interrupts to create a smooth user experience.
       </div>
-      <div class="col-sm-6">
+      <div class="col-md-6">
         <img src="/images/quadcopter.jpg" class="mainpicture"></img>
       </div>
     </div>
     <br/>
     <div class="row">
-      <div class="col-sm-6">
+      <div class="col-md-6">
         SIEMENS<br/>
         I began a continuous improvement project to increase worker productivity by creating a new device to more effectively measure the torque of tools used in the warehouse. This included laying out requirements, and designing and building a functioning prototype in German, that a German worker could use. <br/>
         CHALLENGE <br/>
@@ -217,13 +217,13 @@
         RESULT <br/>
         The prototype was significantly more effective than the tool system that Siemens had in place. With the code and the printed circuit board that I had designed, by the time I was leaving back to Canada Siemens was ready to start creating a working version of the project.
       </div>
-      <div class="col-sm-6">
+      <div class="col-md-6">
         <img src="/images/siemens.jpg" class="mainpicture"></img>
       </div>
     </div>
     <br/>
     <div class="row">
-      <div class="col-sm-6">
+      <div class="col-md-6">
         GENERAL MOTORS<br/>
         While managing the chassis section of the General Motors production line, I oversaw a quality based project to reduce the amount of cars that would need to be repaired at the end of the line for not having their brake lines installed properly. <br/>
         CHALLENGE <br/>
@@ -231,7 +231,7 @@
         RESULT <br/>
         By using the 5 why process to root problem solve, I was able to track the problem to specific joints on the brake line. Counter measures were put in place, such as altering the configuration of parts when they arrived at the factory, and I was able to reduce brake fluid fill faults at the factory by 50%. 
       </div>
-      <div class="col-sm-6">
+      <div class="col-md-6">
         <img src="/images/gm.jpg" class="mainpicture"></img>
       </div>
     </div>
@@ -247,22 +247,22 @@
 
   <div class="container-fluid">
     <div class="row">
-      <div class="col-sm-6">
+      <div class="col-md-6">
         TRAVELLING<br/>
         I love to travel and have lived in many different places. Most recently, I lived in Konstanz Germany where I was able to speak in both German and French. I enjoy learning about new places and cultures.
       </div>
-      <div class="col-sm-6">
+      <div class="col-md-6">
         <img src="/images/konstanz.jpg" class="mainpicture"></img>
       </div>
     </div>
     <br/>
     <div class="row">
-      <div class="col-sm-6">
+      <div class="col-md-6">
         LEARNING<br/>
         I work on multiple pet projects in my spare time. In 2014 I built my own working quadcopter from scratch, programmed it, and learned how to fly it. I've built a Hydrogen fuel cell powered RC car, and a robot that can launch jelly beans into your mouth from across the room. 
 
       </div>
-      <div class="col-sm-6">
+      <div class="col-md-6">
 
         <div class="hoverTextContainer">
         <img src="/images/wallrobot.jpg" class="mainpicture"></img>
@@ -270,11 +270,11 @@
     </div>
     <br/>
     <div class="row">
-      <div class="col-sm-6">
+      <div class="col-md-6">
         TRAINING AND ADVENTURING<br/>
         Another way that I push myself is through physical training. I aim to be able to bench press 300 pounds by the end of 2017. 'For me life is continuously being hungry. The meaning of life is not simply to exist, to survive, but to move ahead, to go up, to achieve, to conquer.' - Arnold Schwarzenegger
       </div>
-      <div class="col-sm-6">
+      <div class="col-md-6">
         <img src="/images/climbing.jpg" class="mainpicture"></img>
       </div>
     </div>
