@@ -118,7 +118,7 @@ hr {
 }
 
 .container {
-  border: 3px solid red;
+  //border: 3px solid red;
 }
 
 .et-hero-tabs,
@@ -141,7 +141,7 @@ hr {
   background: #eee;
   text-align: center;
   padding: 0 2em;
-  border:3px solid blue;
+  //border:3px solid blue;
 }
 .et-hero-tabs h1,
 .et-slide h1 {

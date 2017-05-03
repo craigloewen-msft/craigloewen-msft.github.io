@@ -117,6 +117,10 @@ hr {
   //border:3px solid green;
 }
 
+.container {
+  //border: 3px solid red;
+}
+
 .et-hero-tabs,
 .et-slide {
   display: -webkit-box;
@@ -137,6 +141,7 @@ hr {
   background: #eee;
   text-align: center;
   padding: 0 2em;
+  //border:3px solid blue;
 }
 .et-hero-tabs h1,
 .et-slide h1 {
@@ -169,6 +174,7 @@ hr {
   -webkit-transition: all 0.3s cubic-bezier(0.19, 1, 0.22, 1);
   transition: all 0.3s cubic-bezier(0.19, 1, 0.22, 1);
 }
+
 .et-hero-tabs-container--top-first {
   position: fixed;
   top: 75px;

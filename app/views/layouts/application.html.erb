@@ -1,26 +1,37 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>Craig Loewen</title>
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+<head>
+  <title>Craig Loewen</title>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
 
+  <link href="https://fonts.googleapis.com/css?family=Lato:400,700" rel="stylesheet">
+  <%= stylesheet_link_tag 'style' %>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
-    <%= csrf_meta_tags %>
+  <%= csrf_meta_tags %>
 
-    <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
-    <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
+  <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+  <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
 
+  <% if browser.ie? %>
+  <style>
+    .et-hero-tabs-container {
+      position: relative;
+        padding-left: - 1000px;
+   }
 
-      <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-  <!--[if lt IE 11]>
-      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-    <![endif]-->
+   .mainpicture {
+      max-height: 70vh;
+      width: auto;
+   }
 
-  </head>
+ </style>
+ <% end %>
 
-  <body>
-    <%= yield %>
-  </body>
+</head>
+
+<body>
+  <%= yield %>
+</body>
 </html>
