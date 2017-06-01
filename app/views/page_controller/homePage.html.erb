@@ -41,7 +41,7 @@
             <p class="pagetext">My name's Craig Loewen, I study Mechatronics Engineering at the University of Waterloo. I pride myself in being a cross-discipline problem solver. I've worked in a wide range of industries, from automotive to software, and have a wide range of skills from development to management. I enjoy designing, creating, and leaving things better from where I found them. </br></br>
               I have a strong desire for excellence. This shows through my hard work as I am ranked 1st in my class of 140+ students in one of the most competitive engineering programs in Canada. I enjoy inspiring others through teamwork, and as president of the Waterloo Weightlifting & Fitness Club I am able to push people to realize their fitness goals. </br></br>
               I'm a South African Canadian, and have lived in Europe, Africa, and Canada. My main hobbies are weight lifting, camping and hiking.</p> <br/>
-              <button type="button" class="btn btn-primary" onclick="_gaq.push([‘_trackEvent’,’Download’,’Resume’,this.href]); location.href ='/Craig_Loewen_Resume.pdf';" >My Resume</button> <br/>
+              <button type="button" class="btn btn-primary" onclick="ga('send', 'event', 'Resume', 'click', 'Resume'); location.href = '/Craig_Loewen_Resume.pdf';">My Resume</button> <br/>
             </div>
             <div class="col-md-5">
               <img src="/images/about_me.jpg" class="mainpicture"></img>
@@ -109,7 +109,7 @@
       </div>
 
       <h2> Get it on Windows </h2>
-      <button type="button" class="btn btn-primary" onclick="location.href = 'https://github.com/craigaloewen/SpotMeCode';">Get the Source Code on Github</button>
+      <button type="button" class="btn btn-primary" onclick="ga('send', 'event', 'Code', 'click', 'Spotme'); location.href = 'https://github.com/craigaloewen/SpotMeCode';">Get the Source Code on Github</button>
 
     </br>
   </br>
@@ -181,7 +181,7 @@
 
 
 
-      <button type="button" class="btn btn-primary" onclick="location.href = 'https://github.com/craigaloewen/FlappyBirdAI';">Get the Source Code on Github</button>
+      <button type="button" class="btn btn-primary" onclick="ga('send', 'event', 'Code', 'click', 'FlappyBirdAI'); location.href = 'https://github.com/craigaloewen/FlappyBirdAI';">Get the Source Code on Github</button>
     </div>
 
     
@@ -283,13 +283,13 @@
                   <p class="pagetext">Email me at:<br/><br/>
                     craigaloewen@gmail.com<br/><br/>
                     Or find me on LinkedIn, or GitHub with the links below:<br/><br/></p>
-                    <button type="button" class="btn" onclick="window.open('https://www.linkedin.com/in/craig-a-loewen-8b020675','_blank');">
+                    <button type="button" class="btn" onclick="ga('send', 'event', 'Contact', 'click', 'LinkedIn'); window.open('https://www.linkedin.com/in/craig-a-loewen-8b020675','_blank');">
                       <p class="contactbuttonbox contactbuttonbox-linkedin fa-3x"><i class="fa-linkedin fa"></i> LinkedIn</p>
                     </button>
-                    <button type="button" class="btn" onclick="window.open('https://github.com/craigaloewen','_blank');">
+                    <button type="button" class="btn" onclick="ga('send', 'event', 'Contact', 'click', 'Github'); window.open('https://github.com/craigaloewen','_blank');">
                       <p class="contactbuttonbox contactbuttonbox-github fa-3x"><i class="fa-github fa"></i> Github</p>
                     </button>
-                    <button type="button" class="btn" onclick="location.href = 'mailto:craigaloewen@gmail.com';">
+                    <button type="button" class="btn" onclick="ga('send', 'event', 'Contact', 'click', 'Email'); location.href = 'mailto:craigaloewen@gmail.com';">
                       <p class="contactbuttonbox contactbuttonbox-github fa-3x"><i class="fa-envelope fa"></i> Email</p>
                     </button>
 
