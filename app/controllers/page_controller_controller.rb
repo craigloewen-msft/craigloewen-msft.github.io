@@ -3,4 +3,6 @@ class PageControllerController < ApplicationController
   end
   def testPage
   end
+  def spotme
+  end
 end
