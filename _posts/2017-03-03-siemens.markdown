@@ -1,0 +1,15 @@
+---
+layout: post
+img: img/siemens.jpg
+name: Siemens
+modalID: siemens
+headertext: Siemens
+---
+
+I began a continuous improvement project to increase worker productivity by creating a new device to more effectively measure the torque of tools used in the warehouse. This included laying out requirements, and designing and building a functioning prototype in German, that a German worker could use. 
+
+### Challenge
+When I arrived in Germany, I did not speak any German. After learning as much as I could, and studying hard everyday, two months into my work term I was able to sit down with a worker who spoke only German and explain the new process to him, plus get his feedback. 
+
+### Result
+The prototype was significantly more effective than the tool system that Siemens had in place. With the code and the printed circuit board that I had designed, by the time I was leaving back to Canada Siemens was ready to start creating a working version of the project.

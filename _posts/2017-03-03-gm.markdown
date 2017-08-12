@@ -1,0 +1,15 @@
+---
+layout: post
+img: img/gm.jpg
+name: General Motors
+modalID: gm
+headertext: General Motors
+---
+
+While managing the chassis section of the General Motors production line, I oversaw a quality based project to reduce the amount of cars that would need to be repaired at the end of the line for not having their brake lines installed properly. 
+
+### Challenge
+Brake lines on modern cars are quite complicated on an Engineering level. They span the entire length of the car, and so many different teams on the production line install different parts. It was a significant challenge to track exactly where the issue was coming from, and to properly work with over ten production teams of fifteen people each to solve the problem. 
+
+### Result
+By using the 5 why process to root problem solve, I was able to track the problem to specific joints on the brake line. Counter measures were put in place, such as altering the configuration of parts when they arrived at the factory, and I was able to reduce brake fluid fill faults at the factory by 50%.
