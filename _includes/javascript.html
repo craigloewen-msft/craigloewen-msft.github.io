@@ -7,6 +7,8 @@
 <!-- Contact Form JavaScript -->
 <!-- Custom Theme JavaScript -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/startbootstrap-freelancer/3.3.7/js/freelancer.min.js"></script>
+
+{% if site.GH_ENV != null %}
 <!-- Google analytics -->
  <script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
@@ -18,3 +20,4 @@
   ga('send', 'pageview');
 
 </script>
+{% endif %}

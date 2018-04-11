@@ -4,6 +4,7 @@ img: img/gm.jpg
 name: General Motors
 modalID: gm
 headertext: General Motors
+shortdescription: Brake fill failure reduction
 ---
 
 While managing the chassis section of the General Motors production line, I oversaw a quality based project to reduce the amount of cars that would need to be repaired at the end of the line for not having their brake lines installed properly. 

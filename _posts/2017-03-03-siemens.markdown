@@ -4,6 +4,7 @@ img: img/siemens.jpg
 name: Siemens
 modalID: siemens
 headertext: Siemens
+shortdescription: Working in Germany while learning German
 ---
 
 I began a continuous improvement project to increase worker productivity by creating a new device to more effectively measure the torque of tools used in the warehouse. This included laying out requirements, and designing and building a functioning prototype in German, that a German worker could use. 

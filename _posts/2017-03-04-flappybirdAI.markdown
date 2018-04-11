@@ -4,6 +4,7 @@ img: img/neuralnetwork.gif
 name: FlappyBird AI
 modalID: flappybirdAI
 headertext: FlappyBird AI
+shortdescription: Building an AI to learn to play an iPhone game
 ---
 
 The picture above shows the 'brain' (read: Neural Network) of a bird that I designed and how it chooses when to flap to complete an obstacle course. 
