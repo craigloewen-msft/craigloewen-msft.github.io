@@ -8,17 +8,17 @@
             </div>
         </div>
         <div class="row align-items-center">
-            {% for post in site.posts %}
+            {% for proj in site.proj_files %}
             <div class="col-sm-4 text-center portfolio-item">
-                <p class="pagetext">{{ post.headertext }} </p>
-                <a href="#{{ post.modalID }}" class="portfolio-link" data-toggle="modal" onclick="ga('send', 'event', 'Projects', 'click', 'Projects_{{ post.modalID }}');">
+                <p class="pagetext">{{ proj.headertext }} </p>
+                <a href="#{{ proj.modalID }}" class="portfolio-link" data-toggle="modal" onclick="ga('send', 'event', 'Projects', 'click', 'Projects_{{ proj.modalID }}');">
                     <div class="caption">
                         <div class="caption-content">
                             <i class="fa fa-search-plus fa-3x"></i>
                         </div>
                     </div>
-                    <img src="{{ post.img }}" class="img-responsive" alt=""></img>
-                    <p>{{ post.shortdescription }}</p>
+                    <img src="{{ proj.img }}" class="img-responsive" alt=""></img>
+                    <p>{{ proj.shortdescription }}</p>
                 </a>
             </div>
             {% endfor %}

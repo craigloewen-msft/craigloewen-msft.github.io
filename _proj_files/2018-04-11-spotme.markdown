@@ -1,5 +1,5 @@
 ---
-layout: post
+layout: proj
 img: img/spotmelogo.png
 name: SpotMe
 modalID: spotmeproject

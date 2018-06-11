@@ -1,5 +1,5 @@
 ---
-layout: post
+layout: proj
 img: img/quadcopter.jpg
 name: Quadcopter Design
 modalID: quadcopter

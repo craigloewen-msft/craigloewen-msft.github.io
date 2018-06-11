@@ -25,3 +25,21 @@ markdown: kramdown
 
 gems: ['kramdown']
 exclude: ['config.ru', 'Gemfile', 'Gemfile.lock', 'vendor', 'Procfile', 'Rakefile']
+
+plugins:
+  - jekyll-seo-tag
+
+defaults:
+- scope:
+    path: _posts
+    type: posts
+  values:
+    layout: post
+    sectionid: blog
+
+collections:
+  posts:
+    permalink: /blog/:year/:month/:day/:title/
+    output: true
+  proj_files:
+    output: false

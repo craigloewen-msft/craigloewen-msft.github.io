@@ -1,5 +1,5 @@
 ---
-layout: post
+layout: proj
 img: img/neuralnetwork.gif
 name: FlappyBird AI
 modalID: flappybirdAI

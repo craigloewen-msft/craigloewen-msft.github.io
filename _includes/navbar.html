@@ -32,6 +32,9 @@
                 <li class="page-scroll">
                     <a href="#contact" onclick="ga('send', 'event', 'Navigation', 'click', 'Nav_Contact');">Contact Me</a>
                 </li>
+                <li class="page-scroll site-page-button">
+                    <a href="{{ site.posts.first.url | prepend: site.baseurl }}">Blog</a>
+                </li>
             </ul>
         </div>
         <!-- /.navbar-collapse -->

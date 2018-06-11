@@ -1,0 +1,92 @@
+.blog-header {
+  text-align: center;
+  background: #18BC9C;
+  color: white;
+}
+.blog-header .container {
+  padding-top: 100px;
+  padding-bottom: 50px;
+}
+.blog-header img {
+  display: block;
+  margin: 0 auto 20px;
+}
+.blog-header .intro-text .name {
+  display: block;
+  font-family: "Montserrat", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  text-transform: uppercase;
+  font-weight: 700;
+  font-size: 2em;
+}
+.blog-header .intro-text .skills {
+  font-size: 1.25em;
+  font-weight: 300;
+}
+@media (min-width: 768px) {
+  .blog-header .container {
+    padding-top: 200px;
+    padding-bottom: 100px;
+  }
+  .blog-header .intro-text .name {
+    font-size: 4.75em;
+  }
+  .blog-header .intro-text .skills {
+    font-size: 1.75em;
+  }
+}
+
+.page-content {
+  padding-top: 80px;
+  padding-bottom: 20px;
+}
+
+@media (min-width: 768px) {
+  .page-content {
+    padding-top: 150px;
+  }
+}
+
+.share-bar {
+}
+
+@media (max-width: 992px) {
+  .share-bar {
+    float:left;
+  }
+}
+
+.btn-share {
+  display: inline-block;
+  border: 2px solid #000;
+  border-radius: 100%;
+  text-align: center;
+  font-size: 25px;
+  line-height: 20px;
+  width: 25px;
+  height: 25px;
+}
+
+.btn-share-outline {
+  color: black;
+  font-size: 15px;
+  border: 2px solid #000;
+  background: 0 0;
+  transition: all .3s ease-in-out;
+}
+
+.btn-share-outline.active, .btn-share-outline:active, .btn-share-outline:focus, .btn-share-outline:hover {
+  color: #18BC9C;
+  border: 2px solid #18BC9C;
+}
+
+.site-page-button {
+  background-color: #6aa2e3;
+}
+
+.site-page-button:hover {
+  background-color: #fff;
+}
+
+.chart-display {
+  max-width:75%;
+}
