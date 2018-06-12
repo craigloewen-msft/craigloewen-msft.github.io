@@ -19,15 +19,14 @@ twitter_username: craigaloewen
 linkedin_url: https://www.linkedin.com/in/craig-a-loewen-8b020675
 email: craigaloewen@gmail.com
 
+plugins:
+  - jekyll-seo-tag
 
 # Build settings
 markdown: kramdown
 
-gems: ['kramdown']
+gems: ['kramdown','jekyll-seo-tag']
 exclude: ['config.ru', 'Gemfile', 'Gemfile.lock', 'vendor', 'Procfile', 'Rakefile']
-
-plugins:
-  - jekyll-seo-tag
 
 defaults:
 - scope:
