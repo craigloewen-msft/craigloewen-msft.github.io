@@ -8,7 +8,7 @@
             </div>
         </div>
         <div class="row align-items-center">
-            {% for proj in site.proj_files %}
+            {% for proj in site.proj_files reversed %}
             <div class="col-sm-4 text-center portfolio-item">
                 <p class="pagetext">{{ proj.headertext }} </p>
                 <a href="#{{ proj.modalID }}" class="portfolio-link" data-toggle="modal" onclick="ga('send', 'event', 'Projects', 'click', 'Projects_{{ proj.modalID }}');">
