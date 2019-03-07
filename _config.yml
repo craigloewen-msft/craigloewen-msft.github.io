@@ -42,3 +42,5 @@ collections:
     output: true
   proj_files:
     output: false
+  news: 
+    output: false

@@ -1,0 +1,12 @@
+.news-container {
+    overflow-y:scroll;
+    height:200px;
+}
+
+.news-title {
+    font-weight:bold;
+}
+
+.news-segment {
+    margin-bottom: 10px;
+}

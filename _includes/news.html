@@ -1,0 +1,25 @@
+<div class="row">
+    <div class="col-lg-12 text-center" style="margin-top: 25px;">
+        <h3>What I've been up to</h2>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-6">
+        <img src="/img/conferencetalk.jpg" class="img-responsive" style="margin-top: 10px;"/>
+    </div>
+    <div class="col-md-6 news-parent">
+        <h5>Recent News</h5>
+        <div class="well news-container">
+            {% for news_content in site.news reversed %}
+            <div class="news-segment">
+                <div class="news-title">
+                    {{ news_content.date | date: "%B %Y" }} - {{ news_content.title }}
+                </div>
+                <div class="news-content">
+                    {{ news_content.content | remove: '<p>' | remove: '</p>' }}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
