@@ -21,3 +21,41 @@
 
 </script>
 {% endif %}
+
+<!-- Video js -->
+<script>
+  //This loads the IFrame Player API code asynchronously.
+  var tag = document.createElement('script');
+  tag.src = "https://www.youtube.com/iframe_api";
+  var firstScriptTag = document.getElementsByTagName('script')[0];
+  firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+  // This function creates an <iframe> (and YouTube player) after the API code downloads.
+  var player;
+  function onYouTubeIframeAPIReady() {
+      player = new YT.Player('youTubePlayer', {
+          videoId: 'ipyqP2OXXw4', //the code at the end of your old iframe embed script
+          events: {
+              'onReady': onPlayerReady,
+              'onStateChange': onPlayerStateChange
+          }
+      });
+  }
+  function onPlayerReady(event) {
+      //we aren't going to do anything here
+      //event.target.playVideo();
+  }
+  function onPlayerStateChange(event) {
+      // track when user clicks to Play
+      if (event.data == YT.PlayerState.PLAYING) {
+          ga('send', 'event', 'Videos', 'Play', 'SpotMeVideo');
+      }
+      // track when user clicks to Pause
+      if (event.data == YT.PlayerState.PAUSED) {
+          ga('send', 'event', 'Videos', 'Pause', 'SpotMeVideo');
+      }
+      // track when video ends
+      if (event.data == YT.PlayerState.ENDED) {
+          ga('send', 'event', 'Videos', 'Finished', 'SpotMeVideo');
+      }
+  }
+</script>

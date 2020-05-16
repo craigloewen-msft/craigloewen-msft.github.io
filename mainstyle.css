@@ -10,3 +10,18 @@
 .news-segment {
     margin-bottom: 10px;
 }
+
+.video-description {
+    text-align: center;
+}
+
+@media (min-width: 922px) {
+    .video-row {
+        display:flex; 
+        align-items:center;
+    }
+    
+    .video-description {
+        text-align: right;
+    }
+}
