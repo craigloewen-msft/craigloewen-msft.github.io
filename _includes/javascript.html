@@ -47,15 +47,15 @@
   function onPlayerStateChange(event) {
       // track when user clicks to Play
       if (event.data == YT.PlayerState.PLAYING) {
-          ga('send', 'event', 'Videos', 'Play', 'Guitar');
+          ga('send', 'event', 'Videos', 'Play', 'GuitarVideo_Play');
       }
       // track when user clicks to Pause
       if (event.data == YT.PlayerState.PAUSED) {
-          ga('send', 'event', 'Videos', 'Pause', 'Guitar');
+          ga('send', 'event', 'Videos', 'Pause', 'GuitarVideo_Pause');
       }
       // track when video ends
       if (event.data == YT.PlayerState.ENDED) {
-          ga('send', 'event', 'Videos', 'Finished', 'Guitar');
+          ga('send', 'event', 'Videos', 'Finished', 'GuitarVideo_Finished');
       }
   }
 </script>
