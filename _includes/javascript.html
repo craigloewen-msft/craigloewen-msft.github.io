@@ -8,19 +8,15 @@
 <!-- Custom Theme JavaScript -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/startbootstrap-freelancer/3.3.7/js/freelancer.min.js"></script>
 
-{% if site.GH_ENV != null %}
-<!-- Google analytics -->
- <script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-SE3SC9XDNN"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
 
-  ga('create', 'UA-98604973-1', 'auto');
-  ga('send', 'pageview');
-
+  gtag('config', 'G-SE3SC9XDNN');
 </script>
-{% endif %}
 
 <!-- Video js -->
 <script>
@@ -47,15 +43,15 @@
   function onPlayerStateChange(event) {
       // track when user clicks to Play
       if (event.data == YT.PlayerState.PLAYING) {
-          ga('send', 'event', 'Videos', 'Play', 'GuitarVideo_Play');
+          gtag('event', 'video_play');
       }
       // track when user clicks to Pause
       if (event.data == YT.PlayerState.PAUSED) {
-          ga('send', 'event', 'Videos', 'Pause', 'GuitarVideo_Pause');
+          gtag('event', 'video_pause');
       }
       // track when video ends
       if (event.data == YT.PlayerState.ENDED) {
-          ga('send', 'event', 'Videos', 'Finished', 'GuitarVideo_Finished');
+          gtag('event', 'video_finish');
       }
   }
 </script>

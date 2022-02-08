@@ -8,47 +8,56 @@
                     <ul class="list-inline">
                         {% if site.facebook_username %}
                         <li>
-                            <a href="https://www.facebook.com/{{ site.facebook_username }}" class="btn-social btn-outline"><i class="fa fa-fw fa-facebook"></i></a>
+                            <a href="https://www.facebook.com/{{ site.facebook_username }}"
+                                class="btn-social btn-outline"><i class="fa fa-fw fa-facebook"></i></a>
                         </li>
                         {% endif %}
                         {% if site.twitter_username %}
                         <li>
-                            <a href="https://twitter.com/{{ site.twitter_username }}" class="btn-social btn-outline" onclick="ga('send', 'event', 'Contact', 'click', 'Contact_twitter');"><i class="fa fa-fw fa-twitter"></i></a>
+                            <a href="https://twitter.com/{{ site.twitter_username }}" class="btn-social btn-outline"
+                                onclick="gtag('event','contact_twitter');"><i class="fa fa-fw fa-twitter"></i></a>
                         </li>
                         {% endif %}
                         {% if site.github_link %}
                         <li>
-                            <a href="https://github.com/{{ site.github_link }}" class="btn-social btn-outline" onclick="ga('send', 'event', 'Contact', 'click', 'Contact_github');"><i class="fa fa-fw fa-github"></i></a>
+                            <a href="https://github.com/{{ site.github_link }}" class="btn-social btn-outline"
+                                onclick="gtag('event','contact_github');"><i class="fa fa-fw fa-github"></i></a>
                         </li>
                         {% endif %}
                         {% if site.instagram_username %}
                         <li>
-                            <a href="https://www.instagram.com/{{ site.instagram_username }}" class="btn-social btn-outline"><i class="fa fa-fw fa-instagram"></i></a>
+                            <a href="https://www.instagram.com/{{ site.instagram_username }}"
+                                class="btn-social btn-outline"><i class="fa fa-fw fa-instagram"></i></a>
                         </li>
                         {% endif %}
                         {% if site.stackoverflow_url %}
                         <li>
-							<a href="{{ site.stackoverflow_url }}" class="btn-social btn-outline"><i class="fa fa-fw fa-stack-overflow"></i></a>
+                            <a href="{{ site.stackoverflow_url }}" class="btn-social btn-outline"><i
+                                    class="fa fa-fw fa-stack-overflow"></i></a>
                         </li>
                         {% endif %}
                         {% if site.googleplus_username %}
                         <li>
-							<a href="https://plus.google.com/+{{ site.googleplus_username }}" class="btn-social btn-outline"><i class="fa fa-fw fa-google-plus"></i></a>
+                            <a href="https://plus.google.com/+{{ site.googleplus_username }}"
+                                class="btn-social btn-outline"><i class="fa fa-fw fa-google-plus"></i></a>
                         </li>
                         {% endif %}
                         {% if site.skype_username %}
                         <li>
-							<a href="skype:{{ site.skype_username }}?call" class="btn-social btn-outline"><i class="fa fa-fw fa-skype"></i></a>
+                            <a href="skype:{{ site.skype_username }}?call" class="btn-social btn-outline"><i
+                                    class="fa fa-fw fa-skype"></i></a>
                         </li>
                         {% endif %}
                         {% if site.linkedin_url %}
                         <li>
-							<a href="{{ site.linkedin_url }}" class="btn-social btn-outline" onclick="ga('send', 'event', 'Contact', 'click', 'Contact_linkedin');"><i class="fa fa-fw fa-linkedin"></i></a>
+                            <a href="{{ site.linkedin_url }}" class="btn-social btn-outline"
+                                onclick="gtag('event','contact_linkedin');"><i class="fa fa-fw fa-linkedin"></i></a>
                         </li>
                         {% endif %}
                         {% if site.email %}
                         <li>
-							<a href="mailto:{{ site.email }}" class="btn-social btn-outline" onclick="ga('send', 'event', 'Contact', 'click', 'Contact_email');"><i class="fa fa-fw fa-envelope"></i></a>
+                            <a href="mailto:{{ site.email }}" class="btn-social btn-outline"
+                                onclick="gtag('event','contact_email');"><i class="fa fa-fw fa-envelope"></i></a>
                         </li>
                         {% endif %}
                     </ul>
@@ -56,10 +65,12 @@
                 <div class="footer-col col-md-4">
                     {% if page.url == "/" %}
                     <h3>About this site</h3>
-                    <p>This site was created with the help of <a href="http://startbootstrap.com">Start Bootstrap</a> an open source library of Bootstrap themes and templates.</p>
+                    <p>This site was created with the help of <a href="http://startbootstrap.com">Start Bootstrap</a> an
+                        open source library of Bootstrap themes and templates.</p>
                     {% else %}
                     <h3>About</h3>
-                    <p>Craig Loewen is a geek for all things computer and data. You can visit the <a href='{{ site.url }}'>main site here</a> to learn more about Craig.</p>
+                    <p>Craig Loewen is a geek for all things computer and data. You can visit the <a
+                            href='{{ site.url }}'>main site here</a> to learn more about Craig.</p>
 
                     {% endif %}
                 </div>

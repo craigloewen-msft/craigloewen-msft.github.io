@@ -7,6 +7,18 @@ This is the code form my Personal Website. It uses Jekyll and Google analytics a
 
 This blog also used code from the [Jekyll Doc's repository](https://github.com/aksakalli/jekyll-doc-theme).
 
+## Get Started Easily
+
+Just run this command to get started quickly with a container:
+
+```
+docker run -v $(pwd):/srv/jekyll \
+    -p 4000:4000 \
+    -it \
+    jekyll/jekyll:3.8.6 \
+    jekyll serve
+```
+
 ## Copyright and License
 
 Copyright 2017 Craig Loewen under the MIT License

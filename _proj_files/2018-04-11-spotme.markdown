@@ -16,9 +16,9 @@ shortdescription: Building an AI to give weightlifting form advice
                     It was a lot of work (especially as I was the lead project manager and lead developer) but we ended up with a really awesome demo and website which you can see below!
                     </p>
             </div>
-            <div class="col-xl-6 text-center" onclick="ga('send', 'event', 'SpotMe', 'click', 'SpotMe_VisitWebsite');">
-                <button type="button" class="btn btn-primary button-space" onclick="ga('send', 'event', 'SpotMe', 'click', 'SpotMe_VisitWebsite'); window.open('https://spot-me-app.herokuapp.com','_blank');">View the Website</button>
-                <button type="button" class="btn btn-primary button-space" onclick="ga('send', 'event', 'SpotMe', 'click', 'SpotMe_ViewSourceCode'); window.open('https://www.github.com/craigaloewen/spotmecode','_blank');">Get the Source Code</button>
+            <div class="col-xl-6 text-center">
+                <button type="button" class="btn btn-primary button-space" onclick="gtag('event', 'SpotMe_VisitWebsite'); window.open('https://spot-me-app.herokuapp.com','_blank');">View the Website</button>
+                <button type="button" class="btn btn-primary button-space" onclick="gtag('event', 'SpotMe_ViewSourceCode'); window.open('https://www.github.com/craigaloewen/spotmecode','_blank');">Get the Source Code</button>
             </div>
         </div>
     </div>

@@ -7,7 +7,7 @@
             <li>
                 <a href="https://facebook.com/sharer.php?u={{ site.url }}{{ page.url }}"
                 onclick="window.open(this.href, 'pop-up', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0');
-                ga('send', 'event', 'Post_Sharing_FB', 'click', '{{ page.url }}'); return false;"
+                gtag('event', 'Post_Sharing_FB', { 'link': '{{ page.url }}' }); return false;"
                 title="Share on Facebook"
                 class="btn-share btn-share-outline" >
                 <i class="fa fa-fw fa-facebook"></i>
@@ -16,7 +16,7 @@
             <li>
                 <a  href="https://twitter.com/intent/tweet?text={{ page.title }}&url={{ site.url }}{{ page.url }}&via={{ site.twitter_username }}&related={{ site.twitter_username }}"
                     onclick="window.open(this.href, 'pop-up', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0');
-                    ga('send', 'event', 'Post_Sharing_TW', 'click', '{{ page.url }}'); return false;"
+                    gtag('event', 'Post_Sharing_Twitter', {'link': '{{ page.url }}'}); return false;"
                     title="Share on Twitter" 
                     class="btn-share btn-share-outline" >
                     <i class="fa fa-fw fa-twitter"></i>
@@ -25,7 +25,7 @@
             <li>
                 <a  href="http://www.reddit.com/submit?url={{ site.url }}{{ site.baseurl }}{{ page.url }}"
                     onclick="window.open(this.href, 'pop-up', 'left=20,top=20,width=900,height=500,toolbar=1,resizable=0');
-                    ga('send', 'event', 'Post_Sharing_RE', 'click', '{{ page.url }}'); return false;"
+                    gtag('event', 'Post_Sharing_Reddit', {'link': '{{ page.url }}'}); return false;"
                     title="Share on Reddit"
                     class="btn-share btn-share-outline" >
                     <i class="fa fa-fw fa-reddit"></i>
@@ -34,7 +34,7 @@
             <li>
                 <a  href="https://www.linkedin.com/shareArticle?mini=true&url={{ site.url }}{{ site.baseurl }}{{ page.url }}&title={{ page.title }}&summary={{ page.description }}&source={{ site.title }}"
                     onclick="window.open(this.href, 'pop-up', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0');
-                    ga('send', 'event', 'Post_Sharing_LI', 'click', '{{ page.url }}'); return false;"
+                    gtag('event', 'Post_Sharing_LinkedIn', {'link': '{{ page.url }}'}); return false;"
                     title="Share on LinkedIn"
                     class="btn-share btn-share-outline" >
                     <i class="fa fa-fw fa-linkedin"></i>
@@ -43,7 +43,7 @@
             <li>
                 <a  href="mailto:?subject={{ page.title }}&amp;body=Check out this site {{ site.url }}{{ site.baseurl }}{{ page.url }}"
                     title="Share via Email" 
-                    onclick="ga('send', 'event', 'Post_Sharing_EM', 'click', '{{ page.url }}');"
+                    onclick="gtag('event', 'Post_Sharing_Email', {'link': '{{ page.url }}'});"
                     class="btn-share btn-share-outline" >
                     <i class="fa fa-fw fa-envelope"></i>
                 </a>
