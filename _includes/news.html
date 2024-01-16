@@ -1,10 +1,31 @@
 <div class="row">
     <div class="col-lg-12 text-center" style="margin-top: 25px;">
-        <h3>What I've been up to</h2>
+        <h3>What I've been up to</h3>
     </div>
 </div>
 <div class="row">
     <div class="col-md-12">
-        <img src="/img/conferencetalk.jpg" class="img-responsive" style="margin-top: 10px;"/>
+        <img src="/img/wsltalk.jpg" class="img-responsive" style="margin-top: 10px;"/>
     </div>
+</div>
+<div class="row">
+    <div class="col-lg-12 text-center" style="margin-top: 25px;">
+        <h3>My 3 latest talks</h3>
+    </div>
+</div>
+<div class="row">
+    {% assign sorted_talks = site.data.talks | sort: 'date' | reverse %}
+    {% for talk in sorted_talks limit:3 %}
+    <div class="col-md-4">
+        <div class="talk">
+            {% if talk.url %}
+            <h4><a href="{{ talk.url }}">{{ talk.title }}</a></h4>
+            {% else %}
+            <h4>{{ talk.title }}</h4>
+            {% endif %}
+            <p>{{ talk.date | date: "%B %d, %Y" }}</p>
+            <p>{{ talk.location }}</p>
+        </div>
+    </div>
+    {% endfor %}
 </div>
