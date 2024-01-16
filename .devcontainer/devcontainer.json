@@ -3,7 +3,7 @@
 {
 	"name": "Jekyll",
 	// Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
-	"image": "ruby:2.7"
+	"image": "ghcr.io/actions/jekyll-build-pages:v1.0.9"
 
 	// Features to add to the dev container. More info: https://containers.dev/features.
 	// "features": {},
