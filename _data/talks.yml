@@ -1,47 +1,46 @@
-talks:
-  - title: What's new for the Windows Subsystem for Linux
-    conference: Ignite 2018
-    location: Orlando, FL
-    date: 2018-09-15
+- title: What's new for the Windows Subsystem for Linux
+  conference: Ignite 2018
+  location: Orlando, FL
+  date: 2018-09-15
 
-  - title: Using WSL for web development
-    conference: Developer Week 
-    location: San Francisco, CA
-    date: 2019-02-15
+- title: Using WSL for web development
+  conference: Developer Week 
+  location: San Francisco, CA
+  date: 2019-02-15
 
-  - title: "The new Windows subsystem for Linux architecture: a deep dive"
-    conference: Build 2019
-    location: Seattle, WA
-    date: 2019-05-06
-    url: https://www.youtube.com/watch?v=lwhMThePdIo
+- title: "The new Windows subsystem for Linux architecture: a deep dive"
+  conference: Build 2019
+  location: Seattle, WA
+  date: 2019-05-06
+  url: https://www.youtube.com/watch?v=lwhMThePdIo
 
-  - title: WSL 2 deep dive, history and Q&A 
-    conference: WSL Conf
-    location: Online
-    date: 2020-03-10
+- title: WSL 2 deep dive, history and Q&A 
+  conference: WSL Conf
+  location: Online
+  date: 2020-03-10
 
-  - title: Building desktop applications with WSL
-    conference: QT Desktop Days
-    location: Online
-    date: 2020-06-16
+- title: Building desktop applications with WSL
+  conference: QT Desktop Days
+  location: Online
+  date: 2020-06-16
 
-  - title: Developing applications with the Windows Subsystem for Linux
-    conference: Intel Innovation 2022
-    location: San Jose, California
-    date: 2022-09-28
+- title: Developing applications with the Windows Subsystem for Linux
+  conference: Intel Innovation 2022
+  location: San Jose, California
+  date: 2022-09-28
 
-  - title: The Windows Subsystem for Linux latest updates and future improvements
-    conference: Ubuntu Summit 2022
-    location: Prague, Czech Republic
-    date: 2022-10-05
+- title: The Windows Subsystem for Linux latest updates and future improvements
+  conference: Ubuntu Summit 2022
+  location: Prague, Czech Republic
+  date: 2022-10-05
 
-  - title: Run Linux workflows on Windows!
-    conference: UbuCon Korea 2023
-    location: Seoul, South Korea
-    date: 2023-09-04
-    url: https://www.youtube.com/watch?v=J2bFkLff-fA
+- title: Run Linux workflows on Windows!
+  conference: UbuCon Korea 2023
+  location: Seoul, South Korea
+  date: 2023-09-04
+  url: https://www.youtube.com/watch?v=J2bFkLff-fA
 
-  - title: Make an awesome Linux development environment on Windows
-    conference: Ubuntu Summit 2023
-    location: Riga, Latvia
-    date: 2023-11-05
+- title: Make an awesome Linux development environment on Windows
+  conference: Ubuntu Summit 2023
+  location: Riga, Latvia
+  date: 2023-11-05
