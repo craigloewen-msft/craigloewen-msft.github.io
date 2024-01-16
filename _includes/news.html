@@ -17,7 +17,7 @@
     </div>
 </div>
 <div class="row">
-    {% assign sorted_talks = site.data.talks | sort: 'date' | reverse %}
+    {% assign sorted_talks = site.data.talks | where_exp: "talk", "talk.date" | sort: 'date' | reverse %}
     {% for talk in sorted_talks limit:3 %}
     <div class="col-md-4">
         <div class="talk">
