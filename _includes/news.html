@@ -4,25 +4,22 @@
     </div>
 </div>
 <div class="row">
-    <div class="col-md-4">
+    <div class="col-md-6">
         <img src="/img/wsltalk.jpg" class="img-responsive" style="margin-top: 10px;"/>
     </div>
-    <div class="col-md-4">
+    <div class="col-md-6">
         <img src="/img/panel.jpg" class="img-responsive" style="margin-top: 10px;"/>
-    </div>
-    <div class="col-md-4">
-        <img src="/img/build2024-ai-talk.jpg" class="img-responsive" style="margin-top: 10px;"/>
     </div>
 </div>
 <div class="row">
     <div class="col-lg-12 text-center" style="margin-top: 25px;">
-        <h3>My 4 latest talks - <a href="{{ "/alltalks" | prepend: site.baseurl }}">See all</a></h3>
+        <h3>My 3 latest talks - <a href="{{ "/alltalks" | prepend: site.baseurl }}">See all</a></h3>
     </div>
 </div>
 <div class="row">
     {% assign sorted_talks = site.data.talks | where_exp: "talk", "talk.date" | sort: 'date' | reverse %}
-    {% for talk in sorted_talks limit:4 %}
-    <div class="col-md-3">
+    {% for talk in sorted_talks limit:3 %}
+    <div class="col-md-4">
         <div class="talk">
             {% if talk.url %}
             <h4><a href="{{ talk.url }}">{{ talk.title }}</a></h4>
