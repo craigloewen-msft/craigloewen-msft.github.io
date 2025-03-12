@@ -17,6 +17,8 @@ gem "puma"
 
 gem "rake"
 
+gem "webrick"
+
 gem 'rack-jekyll', :git => 'https://github.com/adaoraul/rack-jekyll.git', :require => 'rack/jekyll'
 
 # If you want to use GitHub Pages, remove the "gem "jekyll"" above and

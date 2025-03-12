@@ -11,12 +11,14 @@ This blog also used code from the [Jekyll Doc's repository](https://github.com/a
 
 Just run this command to get started quickly with a container:
 
+Build the image:
+
 ```
-docker run -v $(pwd):/srv/jekyll \
-    -p 4000:4000 \
-    -it \
-    jekyll/jekyll:3.8.6 \
-    jekyll serve
+docker build -t jekyll .
+```
+
+```
+docker run --rm -it -p 4000:4000 -v $(pwd):/usr/src/app -t jekyll
 ```
 
 ## Copyright and License
