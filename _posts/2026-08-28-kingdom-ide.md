@@ -6,7 +6,9 @@ author: Craig Loewen
 
 I've been playing around with a pet project of making an IDE to work better with agents. I'm releasing it here for others to try as well, called Kingdom IDE. You can view the video deep dive, or read on below for the highlights. 
 
-TODO: Link to Youtube Video embedded
+<div class="video-container">
+    <iframe src="https://www.youtube.com/embed/M9V98lRt9J8" title="Kingdom IDE video deep dive" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+</div>
 
 # Goals
 
