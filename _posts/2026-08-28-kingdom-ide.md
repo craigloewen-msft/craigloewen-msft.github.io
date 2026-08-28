@@ -8,7 +8,7 @@ I've been playing around with a pet project of making an IDE to work better with
 
 TODO: Link to Youtube Video embedded
 
-# Top goals
+# Goals
 
 I made this for two primary reasons:
 
