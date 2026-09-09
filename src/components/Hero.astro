@@ -50,21 +50,12 @@ import portrait from '@/assets/img/WaterlooPhoto.jpg';
           in your way, and I talk about it on stage more often than is probably reasonable.
         </p>
 
-        <div class="mt-8 flex flex-wrap gap-3">
-          <ActionLink href="/writing" icon="pen">
-            Read my writing
-          </ActionLink>
-          <ActionLink href="/writing" variant="ghost" icon="mic">
-            See my talks
-          </ActionLink>
-          <ActionLink
-            href={site.resume}
-            variant="ghost"
-            icon="document"
-            analytics="see_resume"
-            external
-          >
+        <div class="mt-8 flex flex-col items-start gap-3">
+          <ActionLink href={site.resume} icon="document" analytics="see_resume" external>
             Resume
+          </ActionLink>
+          <ActionLink href="/writing" variant="ghost" icon="pen">
+            See my writings &amp; talks
           </ActionLink>
         </div>
 
