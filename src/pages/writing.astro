@@ -1,115 +1,30 @@
 ---
-import { getCollection } from 'astro:content';
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import PageHeader from '@/components/PageHeader.astro';
-import Icon from '@/components/Icon.astro';
-import { formatDate, postPath, readingTime } from '@/lib/urls';
+import ContentStream from '@/components/ContentStream.astro';
+import { getStream, countByKind } from '@/lib/stream';
+import { getCollection } from 'astro:content';
 
-const posts = (await getCollection('writing', ({ data }) => !data.draft)).sort(
-  (a, b) => b.data.date.getTime() - a.data.date.getTime(),
-);
+const items = await getStream();
+const counts = countByKind(items);
 
-const external = (await getCollection('externalPosts')).sort(
-  (a, b) => b.data.date.getTime() - a.data.date.getTime(),
-);
-
-// Group my own posts by year for a scannable archive.
-const byYear = posts.reduce<Map<number, typeof posts>>((acc, post) => {
-  const year = post.data.date.getUTCFullYear();
-  const bucket = acc.get(year) ?? [];
-  bucket.push(post);
-  acc.set(year, bucket);
-  return acc;
-}, new Map());
-
-const years = [...byYear.keys()].sort((a, b) => b - a);
+const talks = await getCollection('talks');
+const conferences = [...new Set(talks.map((t) => t.data.conference).filter(Boolean))];
 ---
 
 <BaseLayout
-  title="Writing"
-  description="Posts by Craig Loewen on developer tools, WSL, Linux, AI and engineering."
+  title="Writing & talks"
+  description="Everything Craig Loewen has written, presented or recorded — posts, Microsoft Dev Blogs articles, conference talks and videos on WSL, developer tooling and AI."
   path="/writing"
   image="/og/writing.png"
 >
   <PageHeader
-    kicker="writing"
-    title="Writing"
-    lead={`${posts.length} posts here, plus ${external.length} pieces published on Microsoft blogs and elsewhere.`}
+    kicker="writing & talks"
+    title="Everything in one place"
+    lead={`${counts.Post + counts.Article} posts and articles, ${counts.Talk} talks and ${counts.Video} videos — from ${conferences.slice(0, 3).join(', ')} and beyond.`}
   />
 
   <div class="mx-auto max-w-6xl px-5 py-16 sm:px-8 sm:py-20">
-    {years.map((year) => (
-      <section class="mb-14" data-reveal>
-        <h2 class="font-mono text-sm tracking-[0.14em] text-(--text-muted) uppercase">{year}</h2>
-        <ul class="mt-5 divide-y divide-(--surface-border) border-y border-(--surface-border)">
-          {byYear.get(year)!.map((post) => (
-            <li>
-              <a
-                href={postPath(post.data.date, post.id)}
-                class="group flex flex-col gap-2 py-6 sm:flex-row sm:items-baseline sm:gap-8"
-              >
-                <time
-                  datetime={post.data.date.toISOString()}
-                  class="shrink-0 font-mono text-xs text-(--text-muted) sm:w-32"
-                >
-                  {formatDate(post.data.date)}
-                </time>
-                <div class="flex-1">
-                  <h3 class="text-lg font-medium transition-colors group-hover:text-(--tone-accent)">
-                    {post.data.title}
-                  </h3>
-                  {post.data.description && (
-                    <p class="mt-1.5 line-clamp-2 text-sm text-(--text-muted)">
-                      {post.data.description}
-                    </p>
-                  )}
-                </div>
-                <span class="shrink-0 font-mono text-xs text-(--text-muted)">
-                  {readingTime(post.body)} min
-                </span>
-              </a>
-            </li>
-          ))}
-        </ul>
-      </section>
-    ))}
-
-    <section class="mt-20" data-reveal>
-      <h2 class="font-mono text-sm tracking-[0.14em] text-(--text-muted) uppercase">
-        Published elsewhere
-      </h2>
-      <p class="mt-3 max-w-2xl text-sm text-(--text-muted)">
-        Posts I wrote or reviewed for the Microsoft developer blogs and other publications.
-      </p>
-
-      <ul class="mt-6 divide-y divide-(--surface-border) border-y border-(--surface-border)">
-        {external.map((item) => (
-          <li>
-            <a
-              href={item.data.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              data-analytics="external_post"
-              class="group flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1 py-4"
-            >
-              <span class="flex-1 basis-64 text-sm transition-colors group-hover:text-(--tone-accent)">
-                {item.data.title}
-                <Icon
-                  name="arrowUpRight"
-                  size={12}
-                  class="ml-1.5 inline-block opacity-0 transition-opacity group-hover:opacity-70"
-                />
-              </span>
-              <time
-                datetime={item.data.date.toISOString()}
-                class="font-mono text-xs text-(--text-muted)"
-              >
-                {formatDate(item.data.date)}
-              </time>
-            </a>
-          </li>
-        ))}
-      </ul>
-    </section>
+    <ContentStream items={items} />
   </div>
 </BaseLayout>

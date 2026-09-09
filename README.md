@@ -25,25 +25,33 @@ npm run dev      # http://localhost:4321
 ```
 src/
   assets/img/       images optimised at build time by astro:assets
-  components/       .astro components, plus three Vue islands
+  components/       .astro components, plus one Vue island
   content/          writing/ and projects/ (Markdown + MDX)
   data/             talks, videos and external posts (YAML)
-  layouts/          BaseLayout — head, theme script, header/footer
-  lib/              site config, URL helpers, search index
+  layouts/          BaseLayout — head, header/footer
+  lib/              site config, URL helpers, content stream, search index
   pages/            file-based routes
   styles/global.css the whole design system (Tailwind v4 @theme tokens)
 public/             served as-is: CNAME, resume, legacy /img paths
 ```
 
-Everything is statically rendered and ships **zero JavaScript** except three Vue islands:
+Everything is statically rendered. There is exactly one Vue island —
+`CommandPalette.vue`, the <kbd>Ctrl</kbd>+<kbd>K</kbd> search — and it fetches its index
+from `/search.json` on first open rather than inlining ~15 KB into every page. It must stay
+`client:only="vue"`: it uses `Teleport`, which anchors incorrectly during SSR hydration.
 
-| Island               | Why it needs JS                                   |
-| -------------------- | ------------------------------------------------- |
-| `CommandPalette.vue` | ⌘K search across every post, talk and project     |
-| `TalkExplorer.vue`   | Filter and search 66 talks, videos and articles   |
-| `ThemeToggle.vue`    | Dark/light switch, with an inline no-flash script |
+Everything else that moves is a small vanilla `<script>` over server-rendered markup, so it
+works before hydration and with JavaScript off entirely.
 
 ### Content
+
+Writing and talks are one thing on this site. `src/lib/stream.ts` merges four collections —
+posts, external articles, talks and videos — into a single date-sorted stream, which feeds
+`/writing`, the homepage's "Recent work" section and the search index. `/talks` redirects
+there.
+
+`ContentStream.astro` renders that whole stream server-side and progressively enhances it
+with filter buttons and a search box; the controls stay hidden until the script binds them.
 
 Content is typed with [content collections](https://docs.astro.build/en/guides/content-collections/)
 and Zod schemas in `src/content.config.ts`. Adding a post means dropping a Markdown file into
@@ -56,10 +64,8 @@ that path from frontmatter; don't change it without a redirect plan.
 
 ### Design
 
-Dark by default, respecting `prefers-color-scheme`, with a manual toggle that persists.
-Colours, type and spacing are defined once as `@theme` tokens in `src/styles/global.css`;
-light mode flips the same semantic tokens under a `.light` class. There is no
-`tailwind.config.js` — Tailwind v4 is configured in CSS.
+Dark only. Colours, type and spacing are defined once as `@theme` tokens in
+`src/styles/global.css`. There is no `tailwind.config.js` — Tailwind v4 is configured in CSS.
 
 Social cards are generated at build time by `src/pages/og/[...route].ts`.
 
@@ -67,8 +73,8 @@ Social cards are generated at build time by `src/pages/og/[...route].ts`.
 
 ```bash
 npm run build && npm run preview          # then, in another shell:
-node scripts/interaction-check.mjs        # keyboard, islands and a11y assertions
-OUT=/tmp/shots node scripts/screenshot.mjs # visual snapshots across pages and themes
+node scripts/interaction-check.mjs        # keyboard, palette, stream and a11y assertions
+OUT=/tmp/shots node scripts/screenshot.mjs # visual snapshots across pages
 ```
 
 Both scripts need `npx playwright install chromium`.

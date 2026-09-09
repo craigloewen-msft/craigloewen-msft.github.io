@@ -5,24 +5,23 @@ import { Image } from 'astro:assets';
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import Hero from '@/components/Hero.astro';
 import SectionHeading from '@/components/SectionHeading.astro';
-import PostCard from '@/components/PostCard.astro';
+import StreamRow from '@/components/StreamRow.astro';
 import ProjectCard from '@/components/ProjectCard.astro';
 import ActionLink from '@/components/ActionLink.astro';
 import Prompt from '@/components/Prompt.astro';
 import Icon from '@/components/Icon.astro';
 import { now, socials } from '@/lib/site';
-import { formatMonthYear } from '@/lib/urls';
+import { getStream, countByKind } from '@/lib/stream';
 
 import konstanz from '@/assets/img/konstanz.jpg';
 import wallrobot from '@/assets/img/wallrobot.jpg';
 import climbing from '@/assets/img/climbing.jpg';
 
-const posts = (await getCollection('writing', ({ data }) => !data.draft))
-  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
-  .slice(0, 3);
+const stream = await getStream();
+const counts = countByKind(stream);
+const recent = stream.slice(0, 7);
 
 const allTalks = await getCollection('talks');
-const talks = allTalks.sort((a, b) => b.data.date.getTime() - a.data.date.getTime()).slice(0, 4);
 const conferences = [...new Set(allTalks.map((t) => t.data.conference).filter(Boolean))];
 
 const projects = (await getCollection('projects')).sort((a, b) => a.data.order - b.data.order);
@@ -57,10 +56,7 @@ const interests = [
   {/* Now */}
   <section class="mx-auto max-w-6xl px-5 py-16 sm:px-8 sm:py-20" data-reveal>
     <div class="surface-card p-8 sm:p-10">
-      <div class="flex flex-wrap items-center justify-between gap-3">
-        <Prompt label="now" />
-        <span class="font-mono text-xs text-(--text-muted)">Updated {now.updated}</span>
-      </div>
+      <Prompt label="now" />
       <ul class="mt-6 space-y-3.5">
         {now.items.map((item) => (
           <li class="flex gap-3 text-(--text-secondary)">
@@ -76,47 +72,24 @@ const interests = [
     </div>
   </section>
 
-  {/* Writing */}
+  {/* Writing & talks */}
   <section id="writing" class="mx-auto max-w-6xl px-5 py-16 sm:px-8 sm:py-20" data-reveal>
-    <SectionHeading kicker="writing" title="Selected posts" href="/writing" />
-    <div class="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-      {posts.map((post) => (
-        <PostCard post={post} />
-      ))}
-    </div>
-  </section>
-
-  {/* Speaking */}
-  <section id="speaking" class="mx-auto max-w-6xl px-5 py-16 sm:px-8 sm:py-20" data-reveal>
-    <SectionHeading kicker="speaking" title="On stage" href="/talks" hrefLabel="All talks" />
+    <SectionHeading
+      kicker="writing & talks"
+      title="Recent work"
+      href="/writing"
+      hrefLabel="See everything"
+    />
 
     <p class="mt-5 max-w-2xl text-(--text-muted)">
-      {allTalks.length} talks and counting, across {conferences.slice(0, 4).join(', ')} and more.
+      {counts.Post + counts.Article} posts and articles, {counts.Talk} talks and {counts.Video}{' '}
+      videos, across {conferences.slice(0, 3).join(', ')} and the Microsoft developer blogs.
     </p>
 
     <ul class="mt-10 divide-y divide-(--surface-border) border-y border-(--surface-border)">
-      {talks.map((talk) => (
+      {recent.map((item) => (
         <li>
-          <a
-            href={talk.data.url ?? '/talks'}
-            target={talk.data.url ? '_blank' : undefined}
-            rel={talk.data.url ? 'noopener noreferrer' : undefined}
-            class="group flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1.5 py-5"
-          >
-            <span class="flex-1 basis-64 font-medium transition-colors group-hover:text-(--tone-accent)">
-              {talk.data.title}
-              {talk.data.url && (
-                <Icon
-                  name="arrowUpRight"
-                  size={13}
-                  class="ml-1.5 inline-block opacity-0 transition-opacity group-hover:opacity-70"
-                />
-              )}
-            </span>
-            <span class="font-mono text-xs text-(--text-muted)">
-              {[talk.data.conference, formatMonthYear(talk.data.date)].filter(Boolean).join(' · ')}
-            </span>
-          </a>
+          <StreamRow item={item} showDescription={false} />
         </li>
       ))}
     </ul>

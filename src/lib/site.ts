@@ -32,8 +32,7 @@ export const socials = [
 ] as const;
 
 export const navLinks = [
-  { label: 'Writing', href: '/writing' },
-  { label: 'Talks', href: '/talks' },
+  { label: 'Writing & talks', href: '/writing' },
   { label: 'Projects', href: '/projects' },
   { label: 'About', href: '/about' },
 ] as const;
@@ -42,7 +41,6 @@ export const navLinks = [
  * Short, easily-edited "what I'm doing now" block surfaced on the homepage.
  */
 export const now = {
-  updated: '2026-09',
   items: [
     'Building the Windows Subsystem for Linux at Microsoft — now fully open source.',
     'Exploring how coding agents change the shape of developer tools.',

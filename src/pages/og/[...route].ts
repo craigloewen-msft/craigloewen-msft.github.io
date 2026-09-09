@@ -8,8 +8,10 @@ const projects = await getCollection('projects');
 /** Every page that gets a generated social card, keyed by output path. */
 const pages: Record<string, { title: string; description?: string }> = {
   default: { title: site.title, description: site.tagline },
-  writing: { title: 'Writing', description: 'Posts on developer tools, WSL, Linux and AI.' },
-  talks: { title: 'Talks & appearances', description: 'Conference talks, videos and articles.' },
+  writing: {
+    title: 'Writing & talks',
+    description: 'Posts, articles, conference talks and videos.',
+  },
   projects: { title: "Things I've built", description: 'Selected projects by Craig Loewen.' },
   about: { title: 'About Craig Loewen', description: site.tagline },
 };

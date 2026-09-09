@@ -1,0 +1,68 @@
+---
+import Icon from './Icon.astro';
+import { formatMonthYear } from '@/lib/urls';
+import type { StreamItem } from '@/lib/stream';
+
+interface Props {
+  item: StreamItem;
+  /** Show the post description. Off on the homepage, where space is tighter. */
+  showDescription?: boolean;
+}
+
+const { item, showDescription = true } = Astro.props;
+
+const kindTone: Record<StreamItem['kind'], string> = {
+  Post: 'border-(--tone-accent)/40 text-(--tone-accent)',
+  Article: 'border-(--tone-accent)/25 text-(--tone-accent)/85',
+  Talk: 'border-(--color-ember)/40 text-(--color-ember)',
+  Video: 'border-(--color-ember)/25 text-(--color-ember)/85',
+};
+
+// A handful of older talks were never recorded and have nowhere to point.
+const Tag = item.href ? 'a' : 'div';
+const meta = [item.venue, formatMonthYear(item.date)].filter(Boolean).join(' · ');
+---
+
+<Tag
+  href={item.href || undefined}
+  target={item.external && item.href ? '_blank' : undefined}
+  rel={item.external && item.href ? 'noopener noreferrer' : undefined}
+  data-analytics={item.external && item.href ? `stream_${item.kind.toLowerCase()}` : undefined}
+  class="group flex flex-col gap-x-6 gap-y-2 py-5 sm:flex-row sm:items-baseline"
+>
+  <span
+    class:list={[
+      'inline-flex h-fit w-fit shrink-0 items-center rounded-md border px-2 py-0.5 font-mono text-[10px] tracking-wider uppercase sm:w-16 sm:justify-center',
+      kindTone[item.kind],
+    ]}
+  >
+    {item.kind}
+  </span>
+
+  <span class="flex-1">
+    <span
+      class:list={[
+        'font-medium transition-colors',
+        item.href ? 'group-hover:text-(--tone-accent)' : 'text-(--text-secondary)',
+      ]}
+    >
+      {item.title}
+      {item.external && item.href && (
+        <Icon
+          name="arrowUpRight"
+          size={12}
+          class="ml-1 inline-block opacity-0 transition-opacity group-hover:opacity-70"
+        />
+      )}
+    </span>
+
+    {showDescription && item.description && (
+      <span class="mt-1.5 block text-sm text-balance text-(--text-muted)">{item.description}</span>
+    )}
+  </span>
+
+  <span class="shrink-0 font-mono text-xs text-(--text-muted)">
+    {meta}
+    {item.readingMinutes && <span class="ml-2 opacity-70">{item.readingMinutes} min</span>}
+  </span>
+</Tag>

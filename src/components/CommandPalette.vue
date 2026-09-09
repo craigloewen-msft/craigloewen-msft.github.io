@@ -9,9 +9,27 @@ interface Entry {
   external?: boolean;
 }
 
-const props = defineProps<{ entries: Entry[] }>();
+/**
+ * The index lives at /search.json rather than in every page's HTML, and is
+ * fetched once the first time the palette is opened.
+ */
+const entries = ref<Entry[]>([]);
+let indexPromise: Promise<void> | null = null;
+
+function loadIndex() {
+  indexPromise ??= fetch('/search.json')
+    .then((res) => res.json())
+    .then((data: Entry[]) => {
+      entries.value = data;
+    })
+    .catch(() => {
+      /* offline or blocked — the palette just stays empty */
+    });
+  return indexPromise;
+}
 
 const open = ref(false);
+const loading = ref(false);
 const query = ref('');
 const active = ref(0);
 const inputEl = ref<HTMLInputElement | null>(null);
@@ -20,9 +38,9 @@ let restoreFocusTo: HTMLElement | null = null;
 
 const results = computed(() => {
   const q = query.value.trim().toLowerCase();
-  if (!q) return props.entries.slice(0, 8);
+  if (!q) return entries.value.slice(0, 8);
 
-  return props.entries
+  return entries.value
     .map((entry) => {
       const title = entry.title.toLowerCase();
       const meta = (entry.meta ?? '').toLowerCase();
@@ -51,8 +69,13 @@ async function show() {
   open.value = true;
   query.value = '';
   active.value = 0;
+  loading.value = entries.value.length === 0;
+
   await nextTick();
   inputEl.value?.focus();
+
+  await loadIndex();
+  loading.value = false;
 }
 
 function hide() {
@@ -198,7 +221,7 @@ onUnmounted(() => {
           </ul>
 
           <p v-else class="px-4 py-8 text-center text-sm text-(--text-muted)">
-            No matches for “{{ query }}”
+            {{ loading ? 'Loading…' : `No matches for “${query}”` }}
           </p>
         </div>
       </div>

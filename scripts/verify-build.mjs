@@ -83,6 +83,7 @@ const legacy = [
   '/spot-me',
   '/writing',
   '/talks',
+  '/search.json',
   '/projects',
   '/about',
   '/404.html',
@@ -90,6 +91,19 @@ const legacy = [
 for (const url of legacy) {
   if (!resolves(url)) note(`legacy URL no longer resolves: ${url}`);
 }
+
+// ---- The search index is fetched, not inlined into every page ----
+const searchIndex = JSON.parse(readFileSync(join(DIST, 'search.json'), 'utf8'));
+if (searchIndex.length < 60) note(`search.json has only ${searchIndex.length} entries`);
+const indexedKinds = new Set(searchIndex.map((e) => e.kind));
+for (const kind of ['Post', 'Article', 'Talk', 'Video', 'Page']) {
+  if (!indexedKinds.has(kind)) note(`search.json is missing ${kind} entries`);
+}
+for (const file of htmlFiles) {
+  const html = readFileSync(join(DIST, file), 'utf8');
+  if (html.includes('"kind":"Talk"')) note(`${file}: search index is inlined into the HTML`);
+}
+console.log(`search.json: ${searchIndex.length} entries`);
 
 // ---- Feed and sitemap sanity ----
 const feed = readFileSync(join(DIST, 'feed.xml'), 'utf8');
@@ -122,6 +136,7 @@ for (const file of htmlFiles) {
     ['bootstrap.min.js', 'Bootstrap JS'],
     ['font-awesome', 'Font Awesome'],
     ['html5shiv', 'IE8 shim'],
+    ['\u2318', 'Apple command glyph'],
     ['{%', 'unrendered Liquid tag'],
     ['{{', 'unrendered Liquid/JSX expression'],
   ]) {
