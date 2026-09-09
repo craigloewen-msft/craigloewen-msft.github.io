@@ -31,9 +31,12 @@ export const socials = [
   },
 ] as const;
 
+/**
+ * Projects is deliberately absent: it lives in the homepage scroll, and is
+ * reached from there rather than the header.
+ */
 export const navLinks = [
   { label: 'Writing & talks', href: '/writing' },
-  { label: 'Projects', href: '/projects' },
   { label: 'About', href: '/about' },
 ] as const;
 

@@ -196,6 +196,17 @@ await page.locator('[data-stream-filter="all"]').click();
 await page.waitForTimeout(300);
 check('resetting restores all items', (await visible()) === total);
 
+// Projects left the header, so the homepage scroll must still reach it.
+await page.goto(`${BASE}/`, { waitUntil: 'networkidle' });
+check(
+  'homepage still links to /projects',
+  (await page.locator('main a[href="/projects"]').count()) > 0,
+);
+await page.locator('main a[href="/projects"]').first().click();
+await page.waitForURL('**/projects');
+check('that link reaches the projects page', new URL(page.url()).pathname === '/projects');
+await page.goto(`${BASE}/writing`, { waitUntil: 'networkidle' });
+
 // ---------- Progressive enhancement ----------
 const noJs = await browser.newContext({ javaScriptEnabled: false });
 const noJsPage = await noJs.newPage();
