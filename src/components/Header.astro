@@ -92,30 +92,42 @@ const isActive = (href: string) => path === href || path.startsWith(`${href}/`);
 </header>
 
 <script>
-  function setupHeader() {
+  let scrollBound = false;
+
+  function onScroll() {
+    // Looked up per call so the listener keeps working after a client-side nav
+    // swaps the header element.
     const header = document.querySelector<HTMLElement>('[data-header]');
-    const trigger = document.querySelector<HTMLButtonElement>('[data-menu-trigger]');
-    const nav = document.getElementById('mobile-nav');
     if (!header) return;
 
-    const onScroll = () => {
-      const scrolled = window.scrollY > 12;
-      header.classList.toggle('bg-(--surface-base)/80', scrolled);
-      header.classList.toggle('backdrop-blur-lg', scrolled);
-      header.classList.toggle('border-(--surface-border)', scrolled);
-      header.classList.toggle('border-transparent', !scrolled);
-    };
-    onScroll();
-    window.addEventListener('scroll', onScroll, { passive: true });
+    const scrolled = window.scrollY > 12;
+    header.classList.toggle('bg-(--surface-base)/80', scrolled);
+    header.classList.toggle('backdrop-blur-lg', scrolled);
+    header.classList.toggle('border-(--surface-border)', scrolled);
+    header.classList.toggle('border-transparent', !scrolled);
+  }
 
-    if (trigger && nav) {
-      trigger.addEventListener('click', () => {
-        const open = trigger.getAttribute('aria-expanded') === 'true';
-        trigger.setAttribute('aria-expanded', String(!open));
-        trigger.setAttribute('aria-label', open ? 'Open menu' : 'Close menu');
-        nav.hidden = open;
-      });
+  function setupHeader() {
+    onScroll();
+
+    if (!scrollBound) {
+      scrollBound = true;
+      window.addEventListener('scroll', onScroll, { passive: true });
     }
+
+    const trigger = document.querySelector<HTMLButtonElement>('[data-menu-trigger]');
+    const nav = document.getElementById('mobile-nav');
+    // Guard against binding twice: this runs on load and on astro:page-load,
+    // and a second click listener would immediately undo the first one's toggle.
+    if (!trigger || !nav || trigger.dataset.menuReady) return;
+    trigger.dataset.menuReady = 'true';
+
+    trigger.addEventListener('click', () => {
+      const open = trigger.getAttribute('aria-expanded') === 'true';
+      trigger.setAttribute('aria-expanded', String(!open));
+      trigger.setAttribute('aria-label', open ? 'Open menu' : 'Close menu');
+      nav.hidden = open;
+    });
   }
 
   setupHeader();
