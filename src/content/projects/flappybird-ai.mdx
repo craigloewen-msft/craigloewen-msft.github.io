@@ -1,0 +1,49 @@
+---
+name: FlappyBird AI
+tagline: Teaching a neural network to play an iPhone game
+date: 2017-03-04
+cover: '../../assets/img/neuralnetwork.gif'
+coverAlt: Visualization of the neural network deciding when to flap
+order: 3
+tech:
+  - C++
+  - Neural Networks
+  - Genetic Algorithms
+---
+
+import { Image } from 'astro:assets';
+import learning from '../../assets/img/learningai.gif';
+
+The cover image shows the "brain" — read: neural network — of a bird that I designed,
+and how it chooses when to flap to complete an obstacle course.
+
+<Image src={learning} alt="Successive generations of birds learning to play the game" />
+
+The animation above shows the learning process. By randomly creating a batch of
+different brains, having them complete the course, and then creating a new generation
+based on the birds that went the farthest, we can "evolve" a bird that is better at the
+game.
+
+### Development
+
+The point of this project was to make a computer learn how to play a game effectively.
+I developed a neural network in C++ that evolved using a genetic algorithm. The
+"fittest" birds reproduce the most, and those are the ones that make it through the most
+obstacles. The brain works by feeding in several inputs and producing an output that
+tells the bird to flap or not. After some experimentation I found that one layer of six
+nodes worked best for producing a bird that learned quickly.
+
+### How neural networks and genetic algorithms fit together
+
+Put simply, neural networks are a way of approximating how neurons function in your
+brain. Each neuron sums the values of the neurons before it according to a given weight,
+and the last neuron is the output neuron that indicates when the bird should flap. Each
+neuron's weight represents how much the brain cares about a specific input — speed,
+distance to the top of the obstacle, and so on — which lets the brain make complex
+decisions.
+
+These weights are modified after all the birds have failed. The one that moved farthest
+is the most likely to reproduce, following the biological process in nature. Two bird
+brains are chosen and their "chromosomes" — the associated weights in the network — are
+crossed over to form a child. That child also has a chance of a slight mutation, which
+nudges a weight.

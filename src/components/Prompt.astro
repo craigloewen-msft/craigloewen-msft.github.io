@@ -1,0 +1,30 @@
+---
+/**
+ * The site's signature motif: a terminal prompt with a blinking cursor.
+ * Replaces the old Bootstrap "star divider".
+ */
+interface Props {
+  label: string;
+  class?: string;
+  /** Render the blinking cursor after the label. */
+  cursor?: boolean;
+  as?: 'span' | 'div';
+}
+const { label, class: className = '', cursor = false, as: Tag = 'span' } = Astro.props;
+---
+
+<Tag
+  class={`inline-flex items-center gap-1.5 font-mono text-xs tracking-[0.14em] uppercase ${className}`}
+>
+  <span aria-hidden="true" style="color: var(--tone-accent)">
+    ~$
+  </span>
+  <span>{label}</span>
+  {cursor && (
+    <span
+      aria-hidden="true"
+      class="ml-0.5 inline-block h-[1em] w-[0.5em] animate-(--animate-cursor-blink)"
+      style="background: var(--tone-accent)"
+    />
+  )}
+</Tag>

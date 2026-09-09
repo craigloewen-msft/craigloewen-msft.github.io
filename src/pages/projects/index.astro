@@ -1,0 +1,29 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import PageHeader from '@/components/PageHeader.astro';
+import ProjectCard from '@/components/ProjectCard.astro';
+
+const projects = (await getCollection('projects')).sort((a, b) => a.data.order - b.data.order);
+---
+
+<BaseLayout
+  title="Projects"
+  description="Projects built by Craig Loewen — from award-winning accessibility hardware to quadcopters and neural networks."
+  path="/projects"
+  image="/og/projects.png"
+>
+  <PageHeader
+    kicker="projects"
+    title="Things I've built"
+    lead="Award-winning accessibility hardware, machine learning experiments, quadcopters, and a few production lines along the way."
+  />
+
+  <div class="mx-auto max-w-6xl px-5 py-16 sm:px-8 sm:py-20">
+    <div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+      {projects.map((project) => (
+        <ProjectCard project={project} />
+      ))}
+    </div>
+  </div>
+</BaseLayout>

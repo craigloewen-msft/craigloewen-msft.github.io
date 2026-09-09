@@ -1,0 +1,51 @@
+---
+import { Image } from 'astro:assets';
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+  project: CollectionEntry<'projects'>;
+  class?: string;
+}
+const { project, class: className = '' } = Astro.props;
+const { name, tagline, cover, coverAlt, coverFit, tech } = project.data;
+---
+
+<article class:list={['surface-card surface-card-hover group overflow-hidden', className]}>
+  <a href={`/projects/${project.id}`} class="flex h-full flex-col outline-none">
+    <div
+      class:list={[
+        'aspect-16/10 overflow-hidden border-b border-(--surface-border)',
+        coverFit === 'contain' && 'bg-(--surface-overlay) p-6',
+      ]}
+    >
+      <Image
+        src={cover}
+        alt={coverAlt}
+        width={640}
+        height={400}
+        loading="lazy"
+        class:list={[
+          'size-full transition-transform duration-500 group-hover:scale-[1.03]',
+          coverFit === 'contain' ? 'object-contain' : 'object-cover',
+        ]}
+      />
+    </div>
+
+    <div class="flex flex-1 flex-col p-5">
+      <h3 class="text-base font-semibold transition-colors group-hover:text-(--tone-accent) group-focus-visible:text-(--tone-accent)">
+        {name}
+      </h3>
+      <p class="mt-1.5 text-sm text-(--text-muted)">{tagline}</p>
+
+      {tech.length > 0 && (
+        <ul class="mt-4 flex flex-wrap gap-1.5 pt-1">
+          {tech.map((t) => (
+            <li class="rounded-md border border-(--surface-border) px-2 py-0.5 font-mono text-[10px] tracking-wide text-(--text-muted)">
+              {t}
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
+  </a>
+</article>

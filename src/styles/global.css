@@ -1,0 +1,221 @@
+@import 'tailwindcss';
+
+@import '@fontsource-variable/inter';
+@import '@fontsource-variable/jetbrains-mono';
+
+/* Dark is opt-out via the `light` class on <html>, dark-first by default. */
+@custom-variant light (&:where(.light, .light *));
+
+@theme {
+  --font-sans: 'Inter Variable', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-mono: 'JetBrains Mono Variable', ui-monospace, 'SF Mono', 'Cascadia Code', monospace;
+
+  /* Terminal Warmth palette */
+  --color-ink-950: #08090b;
+  --color-ink-900: #0b0d10;
+  --color-ink-850: #101317;
+  --color-ink-800: #14171c;
+  --color-ink-700: #1b1f26;
+  --color-ink-600: #232830;
+  --color-ink-500: #333a45;
+  --color-ink-400: #4d5666;
+  --color-ink-300: #7b8798;
+  --color-ink-200: #a9b3c1;
+  --color-ink-100: #d3dae3;
+  --color-ink-50: #eef1f5;
+
+  --color-paper-50: #fafaf9;
+  --color-paper-100: #f4f4f2;
+  --color-paper-200: #e7e5e4;
+  --color-paper-300: #d6d3d1;
+
+  --color-accent: #3ddcff;
+  --color-accent-dim: #1ba9cc;
+  --color-accent-deep: #0a7ea4;
+  --color-ember: #ffb86b;
+
+  --radius-card: 0.875rem;
+
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+
+  --animate-cursor-blink: cursor-blink 1.2s steps(2, start) infinite;
+  --animate-rise: rise 0.7s var(--ease-out-expo) both;
+}
+
+@keyframes cursor-blink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 1.25rem, 0);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* ---------------------------------------------------------------- *
+ * Semantic surface tokens, flipped by the `light` class
+ * ---------------------------------------------------------------- */
+:root {
+  --surface-base: var(--color-ink-900);
+  --surface-raised: var(--color-ink-850);
+  --surface-overlay: var(--color-ink-800);
+  --surface-border: var(--color-ink-600);
+  --surface-border-soft: var(--color-ink-700);
+  --text-primary: var(--color-ink-50);
+  --text-secondary: var(--color-ink-200);
+  --text-muted: var(--color-ink-300);
+  --tone-accent: var(--color-accent);
+  --grid-line: color-mix(in oklab, var(--color-ink-500) 42%, transparent);
+  --glow-accent: color-mix(in oklab, var(--color-accent) 20%, transparent);
+  color-scheme: dark;
+}
+
+:root:is(.light) {
+  --surface-base: var(--color-paper-50);
+  --surface-raised: #ffffff;
+  --surface-overlay: #ffffff;
+  --surface-border: var(--color-paper-200);
+  --surface-border-soft: var(--color-paper-100);
+  --text-primary: #16181d;
+  --text-secondary: #3f4753;
+  --text-muted: #6b7482;
+  --tone-accent: var(--color-accent-deep);
+  --grid-line: color-mix(in oklab, #16181d 10%, transparent);
+  --glow-accent: color-mix(in oklab, var(--color-accent-deep) 12%, transparent);
+  color-scheme: light;
+}
+
+@layer base {
+  * {
+    border-color: var(--surface-border);
+  }
+
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+    scroll-padding-top: 5.5rem;
+  }
+
+  body {
+    background-color: var(--surface-base);
+    color: var(--text-primary);
+    font-family: var(--font-sans);
+    font-synthesis-weight: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    overflow-wrap: break-word;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    letter-spacing: -0.022em;
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--tone-accent);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+
+  ::selection {
+    background: color-mix(in oklab, var(--tone-accent) 30%, transparent);
+    color: var(--text-primary);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.001ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.001ms !important;
+    }
+  }
+}
+
+@layer components {
+  /* Scroll-reveal: hidden only when JS is driving it, so no-JS still shows content. */
+  [data-reveal] {
+    opacity: 0;
+    transform: translate3d(0, 1.5rem, 0);
+    transition:
+      opacity 0.6s var(--ease-out-expo),
+      transform 0.6s var(--ease-out-expo);
+  }
+
+  [data-reveal].is-revealed {
+    opacity: 1;
+    transform: none;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    [data-reveal] {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  /* Dot-grid backdrop */
+  .bg-dotgrid {
+    background-image: radial-gradient(var(--grid-line) 1px, transparent 1px);
+    background-size: 28px 28px;
+  }
+
+  /* Film grain so large dark fields don't band */
+  .grain::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.025;
+    mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+}
+
+@utility surface-card {
+  background-color: var(--surface-raised);
+  border: 1px solid var(--surface-border);
+  border-radius: var(--radius-card);
+  transition:
+    border-color 0.3s var(--ease-out-expo),
+    transform 0.3s var(--ease-out-expo),
+    box-shadow 0.3s var(--ease-out-expo);
+}
+
+@utility surface-card-hover {
+  &:hover {
+    border-color: color-mix(in oklab, var(--tone-accent) 55%, transparent);
+    box-shadow: 0 0 0 1px color-mix(in oklab, var(--tone-accent) 18%, transparent);
+    transform: translateY(-2px);
+  }
+}
+
+@utility kicker {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--tone-accent);
+}

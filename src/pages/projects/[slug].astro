@@ -1,0 +1,95 @@
+---
+import { getCollection, render } from 'astro:content';
+import { Image } from 'astro:assets';
+import type { GetStaticPaths } from 'astro';
+
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Prose from '@/components/Prose.astro';
+import ActionLink from '@/components/ActionLink.astro';
+import Icon from '@/components/Icon.astro';
+import Prompt from '@/components/Prompt.astro';
+
+export const getStaticPaths = (async () => {
+  const projects = await getCollection('projects');
+  return projects.map((project) => ({
+    params: { slug: project.id },
+    props: { project },
+  }));
+}) satisfies GetStaticPaths;
+
+const { project } = Astro.props;
+const { Content } = await render(project);
+const { name, tagline, cover, coverAlt, coverFit, role, tech, links } = project.data;
+---
+
+<BaseLayout
+  title={name}
+  description={tagline}
+  path={`/projects/${project.id}`}
+  image={`/og/projects-${project.id}.png`}
+>
+  <article class="mx-auto max-w-4xl px-5 pt-32 sm:px-8 sm:pt-40">
+    <a
+      href="/projects"
+      class="group inline-flex items-center gap-1.5 font-mono text-xs text-(--text-muted) transition-colors hover:text-(--tone-accent)"
+    >
+      <Icon
+        name="arrowRight"
+        size={13}
+        class="rotate-180 transition-transform duration-300 group-hover:-translate-x-1"
+      />
+      All projects
+    </a>
+
+    <header class="mt-6">
+      <Prompt label="project" />
+      <h1 class="mt-3 text-4xl font-semibold sm:text-5xl">{name}</h1>
+      <p class="mt-4 text-lg text-(--text-muted)">{tagline}</p>
+
+      {role && <p class="mt-3 font-mono text-xs text-(--text-muted)">{role}</p>}
+
+      {tech.length > 0 && (
+        <ul class="mt-6 flex flex-wrap gap-2">
+          {tech.map((t) => (
+            <li class="rounded-md border border-(--surface-border) px-2.5 py-1 font-mono text-[11px] tracking-wide text-(--text-muted)">
+              {t}
+            </li>
+          ))}
+        </ul>
+      )}
+
+      {links.length > 0 && (
+        <div class="mt-8 flex flex-wrap gap-3">
+          {links.map((link, i) => (
+            <ActionLink
+              href={link.url}
+              variant={i === 0 ? 'primary' : 'ghost'}
+              analytics={`project_${project.id}`}
+              external
+            >
+              {link.label}
+            </ActionLink>
+          ))}
+        </div>
+      )}
+    </header>
+
+    <Image
+      src={cover}
+      alt={coverAlt}
+      width={1200}
+      height={750}
+      loading="eager"
+      class:list={[
+        'mt-12 w-full rounded-xl border border-(--surface-border)',
+        coverFit === 'contain' ? 'bg-(--surface-raised) object-contain p-10' : 'object-cover',
+      ]}
+    />
+
+    <div class="mt-12">
+      <Prose>
+        <Content />
+      </Prose>
+    </div>
+  </article>
+</BaseLayout>

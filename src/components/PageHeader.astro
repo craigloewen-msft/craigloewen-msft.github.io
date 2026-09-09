@@ -1,0 +1,26 @@
+---
+import Prompt from './Prompt.astro';
+
+interface Props {
+  kicker: string;
+  title: string;
+  lead?: string;
+}
+const { kicker, title, lead } = Astro.props;
+---
+
+<header class="grain relative overflow-hidden border-b border-(--surface-border)">
+  <div class="pointer-events-none absolute inset-0 -z-10" aria-hidden="true">
+    <div class="bg-dotgrid absolute inset-0 opacity-50"></div>
+    <div
+      class="absolute -top-32 left-1/2 h-80 w-[42rem] -translate-x-1/2 rounded-full blur-[110px]"
+      style="background: var(--glow-accent)"
+    ></div>
+  </div>
+
+  <div class="mx-auto max-w-6xl px-5 pt-32 pb-14 sm:px-8 sm:pt-40 sm:pb-16">
+    <Prompt label={kicker} cursor />
+    <h1 class="mt-4 text-4xl font-semibold sm:text-5xl">{title}</h1>
+    {lead && <p class="mt-4 max-w-2xl text-lg text-(--text-muted)">{lead}</p>}
+  </div>
+</header>
