@@ -229,6 +229,48 @@ for (const [from, to] of [
   check(`${from} redirects to ${to}`, new URL(page.url()).pathname === to, page.url());
 }
 
+// ---------- Mobile navigation ----------
+const mobile = await browser.newContext({
+  viewport: { width: 390, height: 844 },
+  hasTouch: true,
+  isMobile: true,
+});
+const mobilePage = await mobile.newPage();
+mobilePage.on('pageerror', (e) => errors.push(String(e)));
+mobilePage.on('console', (m) => m.type() === 'error' && errors.push(m.text()));
+await mobilePage.goto(`${BASE}/`, { waitUntil: 'networkidle' });
+
+const menuTrigger = mobilePage.locator('[data-menu-trigger]');
+const mobileNav = mobilePage.locator('#mobile-nav');
+check('hamburger is visible on mobile', await menuTrigger.isVisible());
+check('mobile nav starts closed', await mobileNav.isHidden());
+
+// A second click listener would cancel the first one's toggle out, so this
+// also guards against the setup script binding twice.
+await menuTrigger.click();
+check('hamburger opens the mobile nav', await mobileNav.isVisible());
+check(
+  'open state is exposed via aria-expanded',
+  (await menuTrigger.getAttribute('aria-expanded')) === 'true',
+);
+await mobilePage.screenshot({ path: `${OUT}/mobile-menu.png` });
+
+await menuTrigger.click();
+check('hamburger closes the mobile nav again', await mobileNav.isHidden());
+
+await menuTrigger.click();
+await mobileNav.locator('a[href="/writing"]').first().click();
+await mobilePage.waitForURL('**/writing');
+check('mobile nav links navigate', new URL(mobilePage.url()).pathname === '/writing');
+check('mobile nav closes after navigating', await mobilePage.locator('#mobile-nav').isHidden());
+
+await mobilePage.locator('[data-menu-trigger]').click();
+check(
+  'hamburger still works after a client-side nav',
+  await mobilePage.locator('#mobile-nav').isVisible(),
+);
+await mobile.close();
+
 // ---------- Accessibility ----------
 await page.goto(`${BASE}/`, { waitUntil: 'networkidle' });
 await page.keyboard.press('Tab');
