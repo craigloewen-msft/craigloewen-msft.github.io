@@ -1,0 +1,73 @@
+---
+import { navLinks, site, socials } from '@/lib/site';
+import Icon from './Icon.astro';
+
+const year = new Date().getFullYear();
+---
+
+<footer class="mt-24 border-t border-(--surface-border)">
+  <div class="mx-auto max-w-6xl px-5 py-14 sm:px-8">
+    <div class="flex flex-col gap-10 sm:flex-row sm:justify-between">
+      <div class="max-w-sm">
+        <p class="font-mono text-sm">
+          <span aria-hidden="true" style="color: var(--tone-accent)">
+            ~$
+          </span>
+          <span class="ml-1.5">craigloewen</span>
+        </p>
+        <p class="mt-3 text-sm text-(--text-muted)">{site.description}</p>
+      </div>
+
+      <div class="flex gap-12">
+        <nav aria-label="Footer">
+          <h2 class="font-mono text-xs tracking-[0.14em] text-(--text-muted) uppercase">Site</h2>
+          <ul class="mt-4 flex flex-col gap-2.5">
+            {navLinks.map((link) => (
+              <li>
+                <a
+                  href={link.href}
+                  class="text-sm text-(--text-secondary) transition-colors hover:text-(--tone-accent)"
+                >
+                  {link.label}
+                </a>
+              </li>
+            ))}
+            <li>
+              <a
+                href="/feed.xml"
+                class="text-sm text-(--text-secondary) transition-colors hover:text-(--tone-accent)"
+              >
+                RSS
+              </a>
+            </li>
+          </ul>
+        </nav>
+
+        <div>
+          <h2 class="font-mono text-xs tracking-[0.14em] text-(--text-muted) uppercase">
+            Elsewhere
+          </h2>
+          <ul class="mt-4 flex flex-col gap-2.5">
+            {socials.map((s) => (
+              <li>
+                <a
+                  href={s.url}
+                  data-analytics={`contact_${s.icon}`}
+                  rel={s.icon === 'mail' ? undefined : 'me noopener'}
+                  class="inline-flex items-center gap-2 text-sm text-(--text-secondary) transition-colors hover:text-(--tone-accent)"
+                >
+                  <Icon name={s.icon} size={16} />
+                  {s.label}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <p class="mt-12 font-mono text-xs text-(--text-muted)">
+      © {year} Craig Loewen · Built with Astro
+    </p>
+  </div>
+</footer>

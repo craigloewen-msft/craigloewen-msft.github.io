@@ -1,0 +1,37 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { formatDate, postPath, readingTime } from '@/lib/urls';
+
+interface Props {
+  post: CollectionEntry<'writing'>;
+  class?: string;
+}
+const { post, class: className = '' } = Astro.props;
+const href = postPath(post.data.date, post.id);
+const minutes = readingTime(post.body);
+---
+
+<article class:list={['surface-card surface-card-hover group h-full p-6', className]}>
+  <a href={href} class="flex h-full flex-col outline-none">
+    <div class="flex items-center gap-2 font-mono text-xs text-(--text-muted)">
+      <time datetime={post.data.date.toISOString()}>{formatDate(post.data.date)}</time>
+      <span aria-hidden="true">·</span>
+      <span>{minutes} min read</span>
+    </div>
+
+    <h3 class="mt-3 text-lg font-semibold transition-colors group-hover:text-(--tone-accent) group-focus-visible:text-(--tone-accent)">
+      {post.data.title}
+    </h3>
+
+    {post.data.description && (
+      <p class="mt-2.5 line-clamp-3 text-sm text-(--text-muted)">{post.data.description}</p>
+    )}
+
+    <span
+      class="mt-auto pt-5 font-mono text-xs text-(--tone-accent) opacity-0 transition-opacity duration-300 group-hover:opacity-100 group-focus-visible:opacity-100"
+      aria-hidden="true"
+    >
+      Read →
+    </span>
+  </a>
+</article>

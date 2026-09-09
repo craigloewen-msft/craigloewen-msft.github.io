@@ -1,0 +1,162 @@
+---
+import StreamRow from './StreamRow.astro';
+import { STREAM_KINDS, countByKind, groupByYear, type StreamItem } from '@/lib/stream';
+
+interface Props {
+  items: StreamItem[];
+}
+
+const { items } = Astro.props;
+
+const counts = countByKind(items);
+const years = groupByYear(items);
+
+const filters = [
+  { value: 'all', label: 'All', count: items.length },
+  ...STREAM_KINDS.map((kind) => ({
+    value: kind.toLowerCase(),
+    // "Post" -> "Posts", and so on.
+    label: `${kind}s`,
+    count: counts[kind],
+  })).filter((f) => f.count > 0),
+];
+---
+
+{/* Controls are progressive enhancement: the full list renders without them. */}
+<div
+  class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between"
+  data-stream-controls
+  hidden
+>
+  <div class="flex flex-wrap gap-2" role="group" aria-label="Filter by type">
+    {filters.map((filter, i) => (
+      <button
+        type="button"
+        data-stream-filter={filter.value}
+        aria-pressed={i === 0 ? 'true' : 'false'}
+        class="rounded-lg border px-3 py-1.5 font-mono text-xs transition-colors aria-pressed:border-(--tone-accent) aria-pressed:text-(--tone-accent) not-aria-pressed:border-(--surface-border) not-aria-pressed:text-(--text-muted) hover:border-(--tone-accent) hover:text-(--tone-accent)"
+      >
+        {filter.label}
+        <span class="ml-1.5 opacity-60">{filter.count}</span>
+      </button>
+    ))}
+  </div>
+
+  <label class="relative sm:w-64">
+    <span class="sr-only">Search everything</span>
+    <svg
+      class="pointer-events-none absolute top-1/2 left-3 -translate-y-1/2 text-(--text-muted)"
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 24 24"
+      width="15"
+      height="15"
+      fill="currentColor"
+      aria-hidden="true"
+    >
+      <path d="M10.5 3.75a6.75 6.75 0 1 0 4.28 11.97l4.5 4.5a.75.75 0 1 0 1.06-1.06l-4.5-4.5A6.75 6.75 0 0 0 10.5 3.75m-5.25 6.75a5.25 5.25 0 1 1 10.5 0 5.25 5.25 0 0 1-10.5 0"></path>
+    </svg>
+    <input
+      type="search"
+      placeholder="Search…"
+      autocomplete="off"
+      data-stream-search
+      class="w-full rounded-lg border border-(--surface-border) bg-transparent py-2 pr-3 pl-9 font-mono text-xs outline-none transition-colors placeholder:text-(--text-muted) focus:border-(--tone-accent)"
+    />
+  </label>
+</div>
+
+<p class="mt-4 font-mono text-xs text-(--text-muted)" aria-live="polite" data-stream-count hidden>
+  {items.length} results
+</p>
+
+<div class="mt-8">
+  {years.map(([year, entries]) => (
+    <section class="mb-12" data-stream-year>
+      <h2 class="font-mono text-sm tracking-[0.14em] text-(--text-muted) uppercase">{year}</h2>
+      <ul class="mt-4 divide-y divide-(--surface-border) border-y border-(--surface-border)">
+        {entries.map((item) => (
+          <li
+            data-stream-item
+            data-kind={item.kind.toLowerCase()}
+            data-search={`${item.title} ${item.venue ?? ''} ${item.kind}`.toLowerCase()}
+          >
+            <StreamRow item={item} />
+          </li>
+        ))}
+      </ul>
+    </section>
+  ))}
+</div>
+
+<p class="mt-16 text-center text-(--text-muted)" data-stream-empty hidden>
+  Nothing matches that.
+</p>
+
+<script>
+  /**
+   * Filtering over a server-rendered list. The markup is already on the page,
+   * so this only toggles visibility — no framework, and the list works with
+   * JavaScript disabled or still loading.
+   */
+  function initStream() {
+    const controls = document.querySelector<HTMLElement>('[data-stream-controls]');
+    // Guard against binding twice: this runs on load and on astro:page-load.
+    if (!controls || controls.dataset.streamReady) return;
+    controls.dataset.streamReady = 'true';
+
+    const search = document.querySelector<HTMLInputElement>('[data-stream-search]');
+    const countEl = document.querySelector<HTMLElement>('[data-stream-count]');
+    const emptyEl = document.querySelector<HTMLElement>('[data-stream-empty]');
+    const filterButtons = [...document.querySelectorAll<HTMLButtonElement>('[data-stream-filter]')];
+    const items = [...document.querySelectorAll<HTMLElement>('[data-stream-item]')];
+    const yearSections = [...document.querySelectorAll<HTMLElement>('[data-stream-year]')];
+
+    // Only reveal the controls once they can actually do something.
+    controls.hidden = false;
+    if (countEl) countEl.hidden = false;
+
+    let kind = 'all';
+    let query = '';
+
+    function apply() {
+      let visible = 0;
+
+      for (const item of items) {
+        const matchesKind = kind === 'all' || item.dataset.kind === kind;
+        const matchesQuery = !query || (item.dataset.search ?? '').includes(query);
+        const show = matchesKind && matchesQuery;
+        item.hidden = !show;
+        if (show) visible++;
+      }
+
+      // Hide year headings that no longer have anything under them.
+      for (const section of yearSections) {
+        section.hidden = !section.querySelector('[data-stream-item]:not([hidden])');
+      }
+
+      if (countEl) countEl.textContent = `${visible} ${visible === 1 ? 'result' : 'results'}`;
+      if (emptyEl) emptyEl.hidden = visible > 0;
+    }
+
+    for (const button of filterButtons) {
+      button.addEventListener('click', () => {
+        kind = button.dataset.streamFilter ?? 'all';
+        for (const other of filterButtons) {
+          other.setAttribute('aria-pressed', String(other === button));
+        }
+        apply();
+      });
+    }
+
+    search?.addEventListener('input', () => {
+      query = search.value.trim().toLowerCase();
+      apply();
+    });
+
+    apply();
+  }
+
+  initStream();
+  // Re-run after client-side navigations.
+  document.addEventListener('astro:page-load', initStream);
+</script>

@@ -1,0 +1,143 @@
+---
+import { getCollection, render } from 'astro:content';
+import type { GetStaticPaths } from 'astro';
+
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Prose from '@/components/Prose.astro';
+import Icon from '@/components/Icon.astro';
+import { formatDate, postPath, readingTime } from '@/lib/urls';
+import { site } from '@/lib/site';
+
+export const getStaticPaths = (async () => {
+  const posts = await getCollection('writing', ({ data }) => !data.draft);
+  const sorted = posts.sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+
+  return sorted.map((post, index) => {
+    const d = post.data.date;
+    const pad = (n: number) => String(n).padStart(2, '0');
+
+    return {
+      // Rebuilds the legacy Jekyll permalink: /blog/:year/:month/:day/:slug/
+      params: {
+        year: String(d.getUTCFullYear()),
+        month: pad(d.getUTCMonth() + 1),
+        day: pad(d.getUTCDate()),
+        slug: post.id,
+      },
+      props: {
+        post,
+        newer: sorted[index - 1],
+        older: sorted[index + 1],
+      },
+    };
+  });
+}) satisfies GetStaticPaths;
+
+const { post, newer, older } = Astro.props;
+const { Content } = await render(post);
+
+const minutes = readingTime(post.body);
+const permalink = postPath(post.data.date, post.id);
+const shareUrl = new URL(permalink, site.url).href;
+
+const shareTargets = [
+  {
+    label: 'Share on X',
+    icon: 'x',
+    href: `https://twitter.com/intent/tweet?text=${encodeURIComponent(post.data.title)}&url=${encodeURIComponent(shareUrl)}`,
+  },
+  {
+    label: 'Share on LinkedIn',
+    icon: 'linkedin',
+    href: `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(shareUrl)}`,
+  },
+];
+---
+
+<BaseLayout
+  title={post.data.title}
+  description={post.data.description}
+  path={permalink}
+  type="article"
+  publishedTime={post.data.date}
+  image={`/og/writing-${post.id}.png`}
+>
+  <article class="mx-auto max-w-3xl px-5 pt-32 sm:px-8 sm:pt-40">
+    <header>
+      <a
+        href="/writing"
+        class="group inline-flex items-center gap-1.5 font-mono text-xs text-(--text-muted) transition-colors hover:text-(--tone-accent)"
+      >
+        <Icon
+          name="arrowRight"
+          size={13}
+          class="rotate-180 transition-transform duration-300 group-hover:-translate-x-1"
+        />
+        All writing
+      </a>
+
+      <h1 class="mt-6 text-4xl leading-tight font-semibold sm:text-5xl">{post.data.title}</h1>
+
+      <div class="mt-5 flex flex-wrap items-center gap-x-3 gap-y-1 font-mono text-xs text-(--text-muted)">
+        <time datetime={post.data.date.toISOString()}>{formatDate(post.data.date)}</time>
+        <span aria-hidden="true">·</span>
+        <span>{post.data.author}</span>
+        <span aria-hidden="true">·</span>
+        <span>{minutes} min read</span>
+      </div>
+    </header>
+
+    <hr class="mt-8 border-(--surface-border)" />
+
+    <div class="mt-10">
+      <Prose>
+        <Content />
+      </Prose>
+    </div>
+
+    <footer class="mt-16 border-t border-(--surface-border) pt-8">
+      <div class="flex flex-wrap items-center justify-between gap-4">
+        <span class="font-mono text-xs text-(--text-muted)">Found this useful? Pass it on.</span>
+        <div class="flex gap-2">
+          {shareTargets.map((target) => (
+            <a
+              href={target.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={target.label}
+              data-analytics={`share_${target.icon}`}
+              class="grid size-9 place-items-center rounded-lg border border-(--surface-border) text-(--text-secondary) transition-colors hover:border-(--tone-accent) hover:text-(--tone-accent)"
+            >
+              <Icon name={target.icon} size={16} />
+            </a>
+          ))}
+        </div>
+      </div>
+
+      <nav class="mt-10 grid gap-4 sm:grid-cols-2" aria-label="More posts">
+        {older && (
+          <a
+            href={postPath(older.data.date, older.id)}
+            class="surface-card surface-card-hover group p-5"
+          >
+            <span class="font-mono text-xs text-(--text-muted)">← Older</span>
+            <span class="mt-2 block font-medium transition-colors group-hover:text-(--tone-accent)">
+              {older.data.title}
+            </span>
+          </a>
+        )}
+        {newer && (
+          <a
+            href={postPath(newer.data.date, newer.id)}
+            class="surface-card surface-card-hover group p-5 sm:col-start-2 sm:text-right"
+          >
+            <span class="font-mono text-xs text-(--text-muted)">Newer →</span>
+            <span class="mt-2 block font-medium transition-colors group-hover:text-(--tone-accent)">
+              {newer.data.title}
+            </span>
+          </a>
+        )}
+      </nav>
+    </footer>
+  </article>
+</BaseLayout>

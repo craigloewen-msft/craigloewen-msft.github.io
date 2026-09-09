@@ -1,0 +1,49 @@
+---
+import Icon from './Icon.astro';
+
+interface Props {
+  href: string;
+  variant?: 'primary' | 'ghost';
+  icon?: string;
+  external?: boolean;
+  analytics?: string;
+  class?: string;
+  download?: boolean;
+}
+
+const {
+  href,
+  variant = 'primary',
+  icon,
+  external = false,
+  analytics,
+  class: className = '',
+} = Astro.props;
+
+const base =
+  'group inline-flex items-center gap-2 rounded-lg px-4 py-2.5 text-sm font-medium transition-all duration-300';
+
+const variants = {
+  primary: 'bg-(--tone-accent) text-(--color-ink-900) hover:brightness-110 hover:-translate-y-0.5',
+  ghost:
+    'border border-(--surface-border) text-(--text-secondary) hover:border-(--tone-accent) hover:text-(--tone-accent) hover:-translate-y-0.5',
+};
+---
+
+<a
+  href={href}
+  class:list={[base, variants[variant], className]}
+  data-analytics={analytics}
+  target={external ? '_blank' : undefined}
+  rel={external ? 'noopener noreferrer' : undefined}
+>
+  {icon && <Icon name={icon} size={16} />}
+  <slot />
+  {external && (
+    <Icon
+      name="arrowUpRight"
+      size={14}
+      class="opacity-60 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+    />
+  )}
+</a>

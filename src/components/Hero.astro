@@ -1,0 +1,107 @@
+---
+import { Image } from 'astro:assets';
+import { site, socials } from '@/lib/site';
+import ActionLink from './ActionLink.astro';
+import Icon from './Icon.astro';
+import portrait from '@/assets/img/WaterlooPhoto.jpg';
+---
+
+<section class="grain relative overflow-hidden">
+  {/* Accent glow + dot grid backdrop */}
+  <div class="pointer-events-none absolute inset-0 -z-10" aria-hidden="true">
+    <div class="bg-dotgrid absolute inset-0 opacity-60"></div>
+    <div
+      class="absolute -top-40 left-1/2 h-[36rem] w-[56rem] -translate-x-1/2 rounded-full blur-[120px]"
+      style="background: var(--glow-accent)"
+    ></div>
+    <div
+      class="absolute inset-x-0 bottom-0 h-40"
+      style="background: linear-gradient(to bottom, transparent, var(--surface-base))"
+    ></div>
+  </div>
+
+  <div class="mx-auto max-w-6xl px-5 pt-32 pb-20 sm:px-8 sm:pt-40 sm:pb-28">
+    <div class="grid items-center gap-12 lg:grid-cols-[1.15fr_0.85fr] lg:gap-16">
+      <div>
+        <p class="flex items-center gap-1.5 font-mono text-xs tracking-[0.14em] uppercase">
+          <span aria-hidden="true" style="color: var(--tone-accent)">
+            ~$
+          </span>
+          <span class="text-(--text-muted)">whoami</span>
+          <span
+            aria-hidden="true"
+            class="ml-0.5 inline-block h-[1em] w-[0.5em] animate-(--animate-cursor-blink)"
+            style="background: var(--tone-accent)"
+          ></span>
+        </p>
+
+        <h1 class="mt-5 text-5xl leading-[1.05] font-semibold sm:text-6xl lg:text-7xl">
+          Craig Loewen
+        </h1>
+
+        <p class="mt-5 max-w-xl text-lg text-(--text-secondary) sm:text-xl">
+          I build developer tools at Microsoft — currently the{' '}
+          <span class="text-(--text-primary)">Windows Subsystem for Linux</span>, now fully open
+          source.
+        </p>
+
+        <p class="mt-4 max-w-xl text-(--text-muted)">
+          Mechatronics engineer turned product manager. I care about the moment a tool stops getting
+          in your way, and I talk about it on stage more often than is probably reasonable.
+        </p>
+
+        <div class="mt-8 flex flex-wrap gap-3">
+          <ActionLink href="/writing" icon="pen">
+            Read my writing
+          </ActionLink>
+          <ActionLink href="/writing" variant="ghost" icon="mic">
+            See my talks
+          </ActionLink>
+          <ActionLink
+            href={site.resume}
+            variant="ghost"
+            icon="document"
+            analytics="see_resume"
+            external
+          >
+            Resume
+          </ActionLink>
+        </div>
+
+        <ul class="mt-9 flex flex-wrap items-center gap-4">
+          {socials.map((s) => (
+            <li>
+              <a
+                href={s.url}
+                data-analytics={`contact_${s.icon}`}
+                rel={s.icon === 'mail' ? undefined : 'me noopener'}
+                target={s.icon === 'mail' ? undefined : '_blank'}
+                class="inline-flex items-center gap-2 font-mono text-xs text-(--text-muted) transition-colors hover:text-(--tone-accent)"
+              >
+                <Icon name={s.icon} size={16} />
+                <span>{s.handle}</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <div class="relative mx-auto w-full max-w-sm lg:max-w-none">
+        <div
+          class="absolute -inset-3 -z-10 rounded-2xl blur-2xl"
+          style="background: var(--glow-accent)"
+          aria-hidden="true"
+        ></div>
+        <Image
+          src={portrait}
+          alt="Craig Loewen"
+          width={720}
+          height={900}
+          loading="eager"
+          fetchpriority="high"
+          class="w-full rounded-2xl border border-(--surface-border) object-cover shadow-2xl"
+        />
+      </div>
+    </div>
+  </div>
+</section>
