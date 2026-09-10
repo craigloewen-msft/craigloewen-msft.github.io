@@ -96,7 +96,7 @@ export const now = {
   items: [
     'Setting direction for WSL now that it is fully open source — roadmap, governance, and how a Microsoft team and an outside community share one repository.',
     'Working out what Windows developer tooling becomes with a capable agent sitting next to the developer.',
-    'Lifting, guitar, and getting far enough from a screen that the only thing left to solve is the next hold.',
+    'Lifting, guitar, and reading through a backlog of classic literature.',
   ],
 } as const;
 
@@ -105,8 +105,8 @@ export const now = {
  * doesn't fit in a résumé. They live on /about rather than the homepage.
  */
 export const beliefs = [
-  'The best developer tools disappear. If people are talking about your tool instead of their work, something has gone wrong.',
-  'Distribution beats novelty. A good tool that ships in the box beats a great tool nobody installs.',
+  'Developer tools are balancing getting as close to the metal as you can, and abstracting away the complexity for the user.',
+  'Defaults win - make it work best out of the box.',
   'Open source is a product strategy, not a licensing decision.',
-  'The terminal is the most durable interface in computing. Agents change what is on the other end of it, not that we are typing into it.',
+  'Powerful development tools are all about removing barriers between your ideas and actually making them run in a program.',
 ] as const;

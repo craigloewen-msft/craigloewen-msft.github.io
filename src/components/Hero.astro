@@ -1,6 +1,6 @@
 ---
 import { Image } from 'astro:assets';
-import { site, socials, spellOut, yearsSince } from '@/lib/site';
+import { site, socials } from '@/lib/site';
 import ActionLink from './ActionLink.astro';
 import Icon from './Icon.astro';
 
@@ -10,8 +10,6 @@ import Icon from './Icon.astro';
  * front-on gesture shot from the same talk carries /about.
  */
 import portrait from '@/assets/img/talk-stage.jpg';
-
-const years = spellOut(yearsSince());
 ---
 
 <section class="grain relative overflow-hidden">
@@ -52,11 +50,6 @@ const years = spellOut(yearsSince());
           Principal Product Manager at Microsoft. I own the{' '}
           <span class="text-(--text-primary)">Windows Subsystem for Linux</span> — how millions of
           developers run Linux on Windows — and parts of the Windows developer experience.
-        </p>
-
-        <p class="mt-4 max-w-xl text-(--text-muted)">
-          {years.charAt(0).toUpperCase() + years.slice(1)} years on one problem: getting the machine
-          in front of a developer out of their way.
         </p>
 
         <div class="mt-8 flex flex-wrap items-center gap-3">
