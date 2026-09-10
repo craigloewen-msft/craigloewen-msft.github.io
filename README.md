@@ -47,8 +47,8 @@ works before hydration and with JavaScript off entirely.
 
 Writing and talks are one thing on this site. `src/lib/stream.ts` merges four collections —
 posts, external articles, talks and videos — into a single date-sorted stream, which feeds
-`/writing`, the homepage's "Recent work" section and the search index. `/talks` redirects
-there.
+`/writing`, the homepage's "Recent work" section and the search index. `/talks` and
+`/speaking` both redirect there.
 
 `ContentStream.astro` renders that whole stream server-side and progressively enhances it
 with filter buttons and a search box; the controls stay hidden until the script binds them.
@@ -62,23 +62,26 @@ Post URLs keep the original Jekyll shape — `/blog/:year/:month/:day/:slug/` �
 ever shared still resolves. `src/pages/blog/[year]/[month]/[day]/[slug].astro` reconstructs
 that path from frontmatter; don't change it without a redirect plan.
 
-### What the homepage leads with
+### Copy and structure
+
+There are two destinations: `/writing` (everything published, plus the speaking map) and
+`/about` (the detailed version). The homepage is deliberately thin — hero, "now", six recent
+items, three photos, contact — and anything that wants more room belongs on `/about`.
 
 `src/lib/site.ts` is the single source of truth for voice: tagline, short and long bio (the
-press kit reused on `/speaking`), the "Now" list, and the beliefs shown on the homepage. Edit
-copy there before editing pages.
+press kit on `/about`), the "Now" list, and the beliefs. Edit copy there before editing pages.
 
-`src/lib/work.ts` holds the current product areas — the homepage's "What I own" section. It
-replaced the old projects grid, which was all pre-2018 university work. Those projects still
-live at `/projects` as an archive, linked from `/about`; the URLs and the content collection
-are unchanged, they are just no longer the headline.
+`src/lib/work.ts` holds the current product areas — the "What I work on" section of `/about`.
+It replaced a grid of pre-2018 university projects that used to lead the homepage. Those
+projects still live at `/projects` as an archive linked from `/about`; the URLs and the
+content collection are unchanged, they are just no longer the headline.
 
-### Speaking
+### The speaking map
 
-`/speaking` is built from the same `src/data/talks.yml` as the stream. `src/lib/speaking.ts`
-maps each talk's `location` to coordinates via a `PLACES` table and aggregates them by city.
-**When you add a talk in a city that isn't in `PLACES`, add it there too** — otherwise the
-talk silently counts as "online" and gets no marker.
+`/writing` opens with a map of where I've spoken, built from the same `src/data/talks.yml` as
+the stream. `src/lib/speaking.ts` maps each talk's `location` to coordinates via a `PLACES`
+table and aggregates them by city. **When you add a talk in a city that isn't in `PLACES`,
+add it there too** — otherwise the talk silently counts as "online" and gets no marker.
 
 `SpeakingMap.astro` renders those cities onto an SVG world map. The map geometry in
 `src/lib/world-map.ts` is generated, not hand-written, and has no runtime dependency: it was

@@ -1,15 +1,34 @@
 ---
+import { getCollection } from 'astro:content';
+import { Image } from 'astro:assets';
+
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import PageHeader from '@/components/PageHeader.astro';
 import ContentStream from '@/components/ContentStream.astro';
+import SpeakingMap from '@/components/SpeakingMap.astro';
+import SectionHeading from '@/components/SectionHeading.astro';
+import ActionLink from '@/components/ActionLink.astro';
+import { site } from '@/lib/site';
 import { getStream, countByKind } from '@/lib/stream';
-import { getCollection } from 'astro:content';
+import { getSpeaking } from '@/lib/speaking';
+
+import panel from '@/assets/img/panel.jpg';
+import buildDemo from '@/assets/img/build-2024-ai-demo.jpg';
+import conferenceTalk from '@/assets/img/conferencetalk.jpg';
 
 const items = await getStream();
 const counts = countByKind(items);
 
+const { cities, stats } = await getSpeaking();
+
 const talks = await getCollection('talks');
 const conferences = [...new Set(talks.map((t) => t.data.conference).filter(Boolean))];
+
+const gallery = [
+  { image: panel, alt: 'Craig speaking on an AI panel at Ubuntu Summit' },
+  { image: buildDemo, alt: 'Craig running a live demo on stage at Microsoft Build 2024' },
+  { image: conferenceTalk, alt: 'Craig presenting a WSL session at Developer Week' },
+];
 ---
 
 <BaseLayout
@@ -21,10 +40,45 @@ const conferences = [...new Set(talks.map((t) => t.data.conference).filter(Boole
   <PageHeader
     kicker="writing & talks"
     title="Everything in one place"
-    lead={`I write and speak about three things: how Linux and Windows end up on the same machine, what open source looks like from inside a large company, and how agents change the shape of developer tools. This is the full archive — ${counts.Post + counts.Article} posts and articles, ${counts.Talk} talks and ${counts.Video} videos, from ${conferences.slice(0, 3).join(', ')} and beyond.`}
+    lead={`I write and speak about how Linux and Windows end up on the same machine, what open source looks like inside a large company, and how agents change the shape of developer tools. ${counts.Post + counts.Article} posts and articles, ${counts.Talk} talks and ${counts.Video} videos, from ${conferences.slice(0, 3).join(', ')} and beyond.`}
   />
 
   <div class="mx-auto max-w-6xl px-5 py-16 sm:px-8 sm:py-20">
-    <ContentStream items={items} />
+    {/* On stage */}
+    <section data-reveal>
+      <SpeakingMap cities={cities} stats={stats} />
+
+      <div class="mt-5 grid gap-5 sm:grid-cols-3">
+        {gallery.map((shot) => (
+          <Image
+            src={shot.image}
+            alt={shot.alt}
+            width={640}
+            height={430}
+            loading="lazy"
+            class="aspect-3/2 w-full rounded-xl border border-(--surface-border) object-cover"
+          />
+        ))}
+      </div>
+
+      <p class="mt-8 flex flex-wrap items-center gap-x-4 gap-y-3 text-sm text-(--text-muted)">
+        <ActionLink
+          href={`mailto:${site.authorEmail}?subject=Speaking%20invitation`}
+          icon="mail"
+          analytics="contact_mail"
+        >
+          Invite me to speak
+        </ActionLink>
+        <span>Tell me the date, the audience, and whether you want a talk, a demo or a panel.</span>
+      </p>
+    </section>
+
+    {/* The archive */}
+    <section class="mt-24" data-reveal>
+      <SectionHeading kicker="archive" title="Everything I've published" />
+      <div class="mt-10">
+        <ContentStream items={items} />
+      </div>
+    </section>
   </div>
 </BaseLayout>

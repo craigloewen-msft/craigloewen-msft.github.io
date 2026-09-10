@@ -1,7 +1,6 @@
 ---
 import { Image } from 'astro:assets';
 import { site, socials } from '@/lib/site';
-import { getSpeaking } from '@/lib/speaking';
 import ActionLink from './ActionLink.astro';
 import Icon from './Icon.astro';
 
@@ -12,15 +11,6 @@ import Icon from './Icon.astro';
  * still reads "Senior Product Manager".
  */
 import portrait from '@/assets/img/wsltalk.jpg';
-
-const { stats } = await getSpeaking();
-
-const proof = [
-  { value: '5M+', label: 'developers use WSL' },
-  { value: '2018', label: 'leading it since' },
-  { value: String(stats.talks), label: 'conference talks' },
-  { value: String(stats.countries), label: 'countries spoken in' },
-];
 ---
 
 <section class="grain relative overflow-hidden">
@@ -37,7 +27,7 @@ const proof = [
     ></div>
   </div>
 
-  <div class="mx-auto max-w-6xl px-5 pt-32 pb-8 sm:px-8 sm:pt-40 sm:pb-10">
+  <div class="mx-auto max-w-6xl px-5 pt-32 pb-16 sm:px-8 sm:pt-40 sm:pb-20">
     <div class="grid items-center gap-12 lg:grid-cols-[1.05fr_0.95fr] lg:gap-14">
       <div>
         <p class="flex items-center gap-1.5 font-mono text-xs tracking-[0.14em] uppercase">
@@ -64,19 +54,15 @@ const proof = [
         </p>
 
         <p class="mt-4 max-w-xl text-(--text-muted)">
-          I've spent eight years on one problem: getting the machine in front of a developer out of
-          their way. That has meant rebuilding WSL on a real Linux kernel, taking it into the
-          enterprise, and in 2025 opening the whole thing up as open source. Now it means working
-          out what all of that becomes with an agent in the loop.
+          Eight years on one problem: getting the machine in front of a developer out of their way.
         </p>
 
         <div class="mt-8 flex flex-wrap items-center gap-3">
           <ActionLink href={site.resume} icon="document" analytics="see_resume" external>
             Resume
           </ActionLink>
-          <ActionLink href="/speaking" variant="ghost" icon="mic">
-            {' '}
-            What I speak about{' '}
+          <ActionLink href="/writing" variant="ghost" icon="mic">
+            Writing & talks
           </ActionLink>
         </div>
 
@@ -118,20 +104,5 @@ const proof = [
         </figcaption>
       </figure>
     </div>
-
-    {/* Publicly verifiable claims only — no internal numbers. */}
-    <dl class="mt-16 grid grid-cols-2 gap-px overflow-hidden rounded-xl border border-(--surface-border) bg-(--surface-border) sm:grid-cols-4">
-      {proof.map((item) => (
-        <div class="bg-(--surface-raised) px-5 py-6">
-          <dt class="sr-only">{item.label}</dt>
-          <dd>
-            <span class="block text-3xl font-semibold" style="color: var(--tone-accent)">
-              {item.value}
-            </span>
-            <span class="mt-1 block text-sm text-(--text-muted)">{item.label}</span>
-          </dd>
-        </div>
-      ))}
-    </dl>
   </div>
 </section>

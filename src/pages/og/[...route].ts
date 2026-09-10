@@ -12,10 +12,6 @@ const pages: Record<string, { title: string; description?: string }> = {
     title: 'Writing & talks',
     description: 'Posts, articles, conference talks and videos.',
   },
-  speaking: {
-    title: 'Speaking',
-    description: 'Talks on Linux, developer tools, open source and AI.',
-  },
   projects: {
     title: 'Project archive',
     description: 'Engineering projects from before Microsoft.',

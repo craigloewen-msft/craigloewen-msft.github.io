@@ -28,6 +28,7 @@ export default defineConfig({
     '/activity.html': '/writing',
     '/talks': '/writing',
     '/talks.html': '/writing',
+    '/speaking': '/writing',
     '/spot-me': '/projects/spotme',
     '/spot-me.html': '/projects/spotme',
     '/blog': '/writing',

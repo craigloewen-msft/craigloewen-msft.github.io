@@ -128,14 +128,15 @@ check(
   `${await page.locator('header a[href="/writing"]').count()} links`,
 );
 check(
-  'nav label reads "Writing"',
-  /^writing$/i.test((await nav.locator('a[href="/writing"]').first().innerText()).trim()),
+  'nav label reads "Writing & talks"',
+  /writing & talks/i.test(await nav.locator('a[href="/writing"]').first().innerText()),
 );
-// Speaking is its own destination now that talks are the headline credential.
+// Writing and speaking are one page; the header should stay at two destinations
+// (each rendered twice — desktop and mobile).
 check(
-  'nav links to the speaking page',
-  (await page.locator('header a[href="/speaking"]').count()) === 2,
-  `${await page.locator('header a[href="/speaking"]').count()} links`,
+  'nav stays down to two destinations',
+  (await nav.locator('a[href^="/"]').count()) === 4,
+  `${await nav.locator('a[href^="/"]').count()} links`,
 );
 
 const search = page.locator('[data-stream-search]');
@@ -220,8 +221,8 @@ check(
   (await page.locator('main a[href^="/projects"]').count()) === 0,
 );
 check(
-  'homepage sends speaking traffic to /speaking',
-  (await page.locator('main a[href="/speaking"]').count()) > 0,
+  'homepage sends talk traffic to the merged page',
+  (await page.locator('main a[href="/writing"]').count()) > 0,
 );
 await page.goto(`${BASE}/writing`, { waitUntil: 'networkidle' });
 
@@ -240,6 +241,7 @@ await noJs.close();
 // ---------- Legacy routes ----------
 for (const [from, to] of [
   ['/talks', '/writing'],
+  ['/speaking', '/writing'],
   ['/activity', '/writing'],
   ['/allposts', '/writing'],
 ]) {
@@ -295,14 +297,14 @@ await page.keyboard.press('Tab');
 const skip = await page.evaluate(() => document.activeElement?.textContent?.trim() ?? '');
 check('first Tab lands on the skip link', /skip/i.test(skip), skip);
 
-for (const path of ['/', '/writing', '/speaking', '/projects', '/about']) {
+for (const path of ['/', '/writing', '/projects', '/about']) {
   await page.goto(`${BASE}${path}`, { waitUntil: 'networkidle' });
   const missing = await page.$$eval('img:not([alt])', (els) => els.length);
   check(`all images on ${path} have alt text`, missing === 0, `${missing} missing`);
 }
 
 // ---------- Speaking map ----------
-await page.goto(`${BASE}/speaking`, { waitUntil: 'networkidle' });
+await page.goto(`${BASE}/writing`, { waitUntil: 'networkidle' });
 const pins = page.locator('.pin');
 const mapPanel = page.locator('[data-map-panel]');
 const pinCount = await pins.count();
@@ -332,7 +334,7 @@ check(
 
 const noJsSpeakingCtx = await browser.newContext({ javaScriptEnabled: false });
 const noJsSpeaking = await noJsSpeakingCtx.newPage();
-await noJsSpeaking.goto(`${BASE}/speaking`, { waitUntil: 'domcontentloaded' });
+await noJsSpeaking.goto(`${BASE}/writing`, { waitUntil: 'domcontentloaded' });
 check(
   'map and city list render without JavaScript',
   (await noJsSpeaking.locator('.pin').count()) === pinCount &&

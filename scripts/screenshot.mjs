@@ -7,7 +7,6 @@ const OUT = process.env.OUT ?? 'screenshots';
 const shots = [
   { name: 'home', path: '/', full: true },
   { name: 'writing', path: '/writing', full: true },
-  { name: 'speaking', path: '/speaking', full: true },
   { name: 'projects', path: '/projects', full: true },
   { name: 'about', path: '/about', full: true },
   { name: 'post', path: '/blog/2026/08/28/kingdom-ide/', full: true },
@@ -18,7 +17,6 @@ const shots = [
   },
   { name: 'project-detail', path: '/projects/watvision', full: true },
   { name: 'home-mobile', path: '/', full: true, width: 390, height: 844 },
-  { name: 'speaking-mobile', path: '/speaking', full: true, width: 390, height: 844 },
   { name: 'writing-mobile', path: '/writing', full: true, width: 390, height: 844 },
   { name: '404', path: '/does-not-exist', full: false },
 ];

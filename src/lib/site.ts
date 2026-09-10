@@ -42,12 +42,12 @@ export const socials = [
 ] as const;
 
 /**
- * The pre-Microsoft project archive is deliberately absent: it's reached from
- * /about rather than the header, because it isn't what the site is about.
+ * Talks live on /writing alongside the posts — one archive, not two. The
+ * pre-Microsoft project archive is reached from /about rather than the header,
+ * because it isn't what the site is about.
  */
 export const navLinks = [
-  { label: 'Writing', href: '/writing' },
-  { label: 'Speaking', href: '/speaking' },
+  { label: 'Writing & talks', href: '/writing' },
   { label: 'About', href: '/about' },
 ] as const;
 
@@ -58,21 +58,18 @@ export const navLinks = [
 export const now = {
   items: [
     'Setting direction for WSL now that it is fully open source — roadmap, governance, and how a Microsoft team and an outside community share one repository.',
-    'Working out what Windows developer tooling becomes when a capable agent is sitting next to the developer, and turning that into a plan other teams can build against.',
-    'Writing the strategy docs and running the reviews that let a dozen teams make the same call without me in the room.',
-    'Off the clock: lifting, guitar, and getting far enough from a screen that the only thing left to solve is the next hold.',
+    'Working out what Windows developer tooling becomes with a capable agent sitting next to the developer.',
+    'Lifting, guitar, and getting far enough from a screen that the only thing left to solve is the next hold.',
   ],
 } as const;
 
 /**
  * What I believe about the work. Opinions are the part of a product person that
- * doesn't fit in a résumé, and they're the most useful thing to publish.
+ * doesn't fit in a résumé. They live on /about rather than the homepage.
  */
 export const beliefs = [
   'The best developer tools disappear. If people are talking about your tool instead of their work, something has gone wrong.',
   'Distribution beats novelty. A good tool that ships in the box beats a great tool nobody installs.',
   'Open source is a product strategy, not a licensing decision.',
   'The terminal is the most durable interface in computing. Agents change what is on the other end of it, not that we are typing into it.',
-  'Roadmaps are cheap. The strategy document that makes ten teams decide the same way is expensive, and worth it.',
-  'Ship the thing you would want to use at 11pm, tired, the night before a deadline.',
 ] as const;

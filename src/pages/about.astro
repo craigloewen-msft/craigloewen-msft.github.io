@@ -7,7 +7,8 @@ import PageHeader from '@/components/PageHeader.astro';
 import ActionLink from '@/components/ActionLink.astro';
 import SectionHeading from '@/components/SectionHeading.astro';
 import Icon from '@/components/Icon.astro';
-import { bio, site, socials } from '@/lib/site';
+import { beliefs, bio, site, socials } from '@/lib/site';
+import { work } from '@/lib/work';
 import { getSpeaking } from '@/lib/speaking';
 
 /*
@@ -19,22 +20,51 @@ import portrait from '@/assets/img/wsltalk.jpg';
 const { stats } = await getSpeaking();
 const projects = await getCollection('projects');
 
-/** The career in the order it happened, kept to one line each. */
+/** The career in the order it happened. */
 const timeline = [
   {
-    period: '2018 — present',
-    title: 'Principal Product Manager, Microsoft',
-    body: 'Product owner for the Windows Subsystem for Linux, and parts of the Windows developer experience. Through a rewrite onto a real Linux kernel, into the enterprise, and out into the open as open source.',
+    period: 'Aug 2018 — present',
+    title: 'Principal Product Manager · Microsoft',
+    body: 'Product owner for the Windows Subsystem for Linux and other developer features in Windows. Built the multi-year vision, owned the team’s OKRs and success metrics, and worked across Microsoft to ship platform features like Linux GUI app support and enterprise management through Intune and Defender for Endpoint.',
   },
   {
-    period: '2017',
-    title: 'Product Manager intern, Microsoft',
-    body: 'Windows Console. Wrote the specs for six features, and changed the operating system default console colours — which turned out to be the first thing I shipped that The Verge wrote about.',
+    period: 'May 2017 — Aug 2017',
+    title: 'Product Manager intern · Microsoft',
+    body: 'Windows Console. Wrote functional specs for six features, and proposed and implemented the change to the operating system’s default console colours — the first thing I shipped that The Verge wrote about.',
   },
   {
-    period: '2013 — 2018',
-    title: 'Mechatronics Engineering, University of Waterloo',
-    body: 'Co-operative programme with a management sciences option. Graduated first in a class of 110, with work terms at General Motors and at Siemens in Germany.',
+    period: 'Sep 2016 — Dec 2016',
+    title: 'Process Engineering student · General Motors',
+    body: 'Built a camera system that recognised and sorted defects automatically using optical recognition and PLC logic, and wrote a C# tool that turned OEM machine code into readable quality reports.',
+  },
+  {
+    period: 'Jan 2016 — Apr 2016',
+    title: 'Quality Engineering student · Siemens, Konstanz',
+    body: 'Designed and built a tool calibration system and device that cut calibration time by 40%.',
+  },
+  {
+    period: 'Sep 2013 — May 2018',
+    title: 'BASc Mechatronics Engineering · University of Waterloo',
+    body: 'Co-operative programme with a management sciences option. Graduated ranked first in a class of 110 engineering students.',
+  },
+];
+
+const recognition = [
+  {
+    title: 'Granted patent — AI-powered Windows clipboard',
+    body: 'Named inventor. I wrote the working prototype in C#; it shipped in PowerToys as Advanced Paste and was covered by The Verge and Windows Central.',
+  },
+  {
+    title: 'James Dyson Award, national winner for Canada (2018)',
+    body: 'For WatVision, an open source system that lets a visually impaired person use any touch screen with the help of a smartphone. Also won the General Motors innovation award.',
+  },
+  {
+    title: 'First in class of 110',
+    body: 'Mechatronics Engineering, University of Waterloo.',
+  },
+  {
+    title: 'Languages',
+    body: 'Advanced Korean, conversational French and German.',
   },
 ];
 ---
@@ -60,22 +90,20 @@ const timeline = [
         <p>
           Most of what I do now doesn't ship with my name on it. It's the strategy documents, the
           reviews, and the shared vocabulary that let a dozen teams make consistent decisions
-          without me in the room. I'm most useful on the problems that are ambiguous, cross-team,
-          and politically expensive — and I care about growing the people doing that work as much as
-          the products they're building.
+          without me in the room. I'm most useful on the problems that are ambiguous, cross-team and
+          politically expensive.
         </p>
         <p>
           I trained as a mechatronics engineer, which is why I still build the prototype when
-          arguing about it would take longer. I'm South African and Canadian, I've lived in Africa,
-          Europe and North America, and I speak enough German, French and Korean to get into trouble
-          in each.
+          arguing about it would take longer. I'm South African and Canadian, and I've lived in
+          Africa, Europe and North America.
         </p>
 
         <div class="flex flex-wrap gap-3 pt-4">
           <ActionLink href={site.resume} icon="document" analytics="see_resume" external>
             Resume
           </ActionLink>
-          <ActionLink href="/speaking" variant="ghost" icon="mic">
+          <ActionLink href="/writing" variant="ghost" icon="mic">
             {stats.talks} talks in {stats.countries} countries
           </ActionLink>
         </div>
@@ -92,6 +120,57 @@ const timeline = [
         />
       </div>
     </div>
+
+    {/* What I work on */}
+    <section class="mt-24" data-reveal>
+      <SectionHeading kicker="work" title="What I work on" />
+
+      <p class="mt-5 max-w-2xl text-(--text-muted)">
+        Three areas, one thesis: the machine in front of a developer should disappear. Everything
+        below links to something public.
+      </p>
+
+      <div class="mt-10 space-y-5">
+        {work.map((area) => (
+          <article class="surface-card p-8">
+            <div class="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-2">
+              <h3 class="text-xl font-semibold sm:text-2xl">{area.name}</h3>
+              <p class="font-mono text-xs text-(--text-muted)">
+                {area.role} · {area.period}
+              </p>
+            </div>
+
+            <p class="mt-4 max-w-3xl text-(--text-secondary)">{area.summary}</p>
+
+            <ul class="mt-6 space-y-3">
+              {area.outcomes.map((outcome) => (
+                <li class="flex gap-3 text-sm text-(--text-muted)">
+                  <Icon name="arrowRight" size={14} class="mt-1 shrink-0 text-(--tone-accent)" />
+                  <span>{outcome}</span>
+                </li>
+              ))}
+            </ul>
+
+            <ul class="mt-7 flex flex-wrap gap-2">
+              {area.links.map((link) => (
+                <li>
+                  <a
+                    href={link.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    data-analytics="work_link"
+                    class="group inline-flex items-center gap-1.5 rounded-lg border border-(--surface-border) px-3 py-1.5 font-mono text-xs text-(--text-muted) transition-colors hover:border-(--tone-accent) hover:text-(--tone-accent)"
+                  >
+                    {link.label}
+                    <Icon name="arrowUpRight" size={12} class="opacity-60" />
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </article>
+        ))}
+      </div>
+    </section>
 
     {/* Career */}
     <section class="mt-24" data-reveal>
@@ -113,19 +192,50 @@ const timeline = [
       </ol>
     </section>
 
+    {/* Recognition */}
+    <section class="mt-24" data-reveal>
+      <SectionHeading kicker="recognition" title="Patents and awards" />
+
+      <div class="mt-10 grid gap-5 sm:grid-cols-2">
+        {recognition.map((entry) => (
+          <article class="surface-card p-7">
+            <h3 class="text-base font-semibold">{entry.title}</h3>
+            <p class="mt-3 text-sm text-(--text-muted)">{entry.body}</p>
+          </article>
+        ))}
+      </div>
+    </section>
+
+    {/* Beliefs */}
+    <section class="mt-24" data-reveal>
+      <SectionHeading kicker="opinions" title="How I think about developer tools" />
+
+      <ol class="mt-10 grid gap-px overflow-hidden rounded-xl border border-(--surface-border) bg-(--surface-border) sm:grid-cols-2">
+        {beliefs.map((belief, i) => (
+          <li class="flex gap-4 bg-(--surface-raised) p-7">
+            <span class="font-mono text-xs text-(--text-muted)">
+              {String(i + 1).padStart(2, '0')}
+            </span>
+            <p class="text-(--text-secondary)">{belief}</p>
+          </li>
+        ))}
+      </ol>
+    </section>
+
     {/* Press kit */}
     <section class="mt-24" data-reveal>
       <SectionHeading kicker="press kit" title="If you need a bio" />
       <div class="surface-card mt-8 p-8">
         <p class="text-(--text-secondary)">{bio.long}</p>
-        <div class="mt-7 flex flex-wrap gap-3">
-          <ActionLink href="/speaking" variant="ghost" icon="mic">
-            Speaking and booking
-          </ActionLink>
-          <ActionLink href={site.resume} variant="ghost" icon="document" external>
-            Resume
-          </ActionLink>
-        </div>
+
+        <button
+          type="button"
+          data-copy-bio
+          data-bio={bio.long}
+          class="mt-7 inline-flex items-center gap-2 rounded-lg border border-(--surface-border) px-3.5 py-2 font-mono text-xs text-(--text-muted) transition-colors hover:border-(--tone-accent) hover:text-(--tone-accent)"
+        >
+          Copy bio
+        </button>
       </div>
     </section>
 
@@ -135,8 +245,7 @@ const timeline = [
       <p class="mt-5 max-w-2xl text-(--text-muted)">
         {projects.length} engineering projects from university and my work terms — an award-winning
         accessibility device, a quadcopter, a neural network that learned to play a phone game, and
-        a couple of production lines. None of it is what I do now, but it's how I learned to build,
-        and I'd rather keep it than pretend it didn't happen.
+        a couple of production lines. None of it is what I do now, but it's how I learned to build.
       </p>
       <a
         href="/projects"
@@ -170,3 +279,25 @@ const timeline = [
     </section>
   </div>
 </BaseLayout>
+
+<script>
+  function initCopyBio() {
+    const button = document.querySelector<HTMLButtonElement>('[data-copy-bio]');
+    if (!button || button.dataset.copyReady) return;
+    button.dataset.copyReady = 'true';
+
+    const label = button.textContent;
+    button.addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText(button.dataset.bio ?? '');
+        button.textContent = 'Copied';
+      } catch {
+        button.textContent = 'Press Ctrl+C to copy';
+      }
+      setTimeout(() => (button.textContent = label), 2000);
+    });
+  }
+
+  initCopyBio();
+  document.addEventListener('astro:page-load', initCopyBio);
+</script>
