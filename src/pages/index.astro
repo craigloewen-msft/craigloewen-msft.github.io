@@ -1,51 +1,35 @@
 ---
-import { getCollection } from 'astro:content';
 import { Image } from 'astro:assets';
 
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import Hero from '@/components/Hero.astro';
 import SectionHeading from '@/components/SectionHeading.astro';
 import StreamRow from '@/components/StreamRow.astro';
-import ProjectCard from '@/components/ProjectCard.astro';
 import ActionLink from '@/components/ActionLink.astro';
 import Prompt from '@/components/Prompt.astro';
-import Icon from '@/components/Icon.astro';
+import VideoEmbed from '@/components/VideoEmbed.astro';
 import { now, socials } from '@/lib/site';
-import { getStream, countByKind } from '@/lib/stream';
+import { getStream } from '@/lib/stream';
 
 import konstanz from '@/assets/img/konstanz.jpg';
-import wallrobot from '@/assets/img/wallrobot.jpg';
 import climbing from '@/assets/img/climbing.jpg';
+import guitarCover from '@/assets/img/guitar-cover.jpg';
 
 const stream = await getStream();
-const counts = countByKind(stream);
-const recent = stream.slice(0, 7);
-
-const allTalks = await getCollection('talks');
-const conferences = [...new Set(allTalks.map((t) => t.data.conference).filter(Boolean))];
-
-const projects = (await getCollection('projects')).sort((a, b) => a.data.order - b.data.order);
-const featured = projects.find((p) => p.data.featured);
-const rest = projects.filter((p) => !p.data.featured).slice(0, 3);
+const recent = stream.slice(0, 6);
 
 const interests = [
   {
-    title: 'Travelling',
+    title: 'Elsewhere',
     image: konstanz,
     alt: 'Konstanz, Germany',
-    body: 'I love to travel and have lived in many different places. Most recently Konstanz, Germany, where I got to speak both German and French. Learning about new places and cultures is the fastest way I know to get a new perspective.',
-  },
-  {
-    title: 'Building',
-    image: wallrobot,
-    alt: 'A robot built from scratch',
-    body: 'I work on pet projects constantly. In 2014 I built a working quadcopter from scratch, programmed it, and learned to fly it. I have also built a hydrogen fuel cell powered RC car, and a robot that launches jelly beans into your mouth from across the room.',
+    body: "I'm a South African Canadian that's lived in Africa, Europe and North America. I've picked up how to speak German, French and Korean along the way.",
   },
   {
     title: 'Training',
     image: climbing,
     alt: 'Craig climbing outdoors',
-    body: 'The other way I push myself is physically, and outdoors. Lifting, climbing, and getting far enough from a screen that the only thing left to solve is the next hold.',
+    body: 'Weight lifting and physical fitness are also big pillars in my life.',
   },
 ];
 ---
@@ -54,7 +38,7 @@ const interests = [
   <Hero />
 
   {/* Now */}
-  <section class="mx-auto max-w-6xl px-5 py-16 sm:px-8 sm:py-20" data-reveal>
+  <section class="mx-auto max-w-6xl px-5 pb-16 sm:px-8 sm:pb-20" data-reveal>
     <div class="surface-card p-8 sm:p-10">
       <Prompt label="now" />
       <ul class="mt-6 space-y-3.5">
@@ -76,15 +60,10 @@ const interests = [
   <section id="writing" class="mx-auto max-w-6xl px-5 py-16 sm:px-8 sm:py-20" data-reveal>
     <SectionHeading
       kicker="writing & talks"
-      title="Recent work"
+      title="My latest works"
       href="/writing"
       hrefLabel="See everything"
     />
-
-    <p class="mt-5 max-w-2xl text-(--text-muted)">
-      {counts.Post + counts.Article} posts and articles, {counts.Talk} talks and {counts.Video}{' '}
-      videos, across {conferences.slice(0, 3).join(', ')} and the Microsoft developer blogs.
-    </p>
 
     <ul class="mt-10 divide-y divide-(--surface-border) border-y border-(--surface-border)">
       {recent.map((item) => (
@@ -95,63 +74,40 @@ const interests = [
     </ul>
   </section>
 
-  {/* Projects */}
-  <section id="projects" class="mx-auto max-w-6xl px-5 py-16 sm:px-8 sm:py-20" data-reveal>
-    <SectionHeading kicker="projects" title="Things I've built" href="/projects" />
-
-    {featured && (
-      <a
-        href={`/projects/${featured.id}`}
-        class="surface-card surface-card-hover group mt-10 grid overflow-hidden md:grid-cols-2"
-      >
-        <div class="order-2 flex flex-col justify-center p-8 sm:p-10 md:order-1">
-          <span class="kicker">Featured</span>
-          <h3 class="mt-3 text-2xl font-semibold transition-colors group-hover:text-(--tone-accent) sm:text-3xl">
-            {featured.data.name}
-          </h3>
-          <p class="mt-3 text-(--text-muted)">{featured.data.tagline}</p>
-          <span class="mt-6 inline-flex items-center gap-1.5 font-mono text-xs text-(--tone-accent)">
-            View project
-            <Icon
-              name="arrowRight"
-              size={14}
-              class="transition-transform duration-300 group-hover:translate-x-1"
-            />
-          </span>
-        </div>
-        <div class="order-1 aspect-16/10 overflow-hidden md:order-2 md:aspect-auto">
-          <Image
-            src={featured.data.cover}
-            alt={featured.data.coverAlt}
-            width={900}
-            height={640}
-            loading="lazy"
-            class="size-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
-          />
-        </div>
-      </a>
-    )}
-
-    <div class="mt-5 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-      {rest.map((project) => (
-        <ProjectCard project={project} />
-      ))}
-    </div>
-  </section>
-
   {/* When I'm not working */}
   <section id="beyond" class="mx-auto max-w-6xl px-5 py-16 sm:px-8 sm:py-20" data-reveal>
     <SectionHeading kicker="offline" title="When I'm not working" />
 
     <div class="mt-10 grid gap-5 md:grid-cols-3">
+      <article class="surface-card overflow-hidden">
+        <VideoEmbed
+          id="9AbamDR33lc"
+          title="Master of Puppets - Metallica (Guitar Cover)"
+          poster={guitarCover}
+          posterAlt="Craig playing an electric guitar in his living room"
+          class="aspect-video border-b border-(--surface-border)"
+        />
+        <div class="p-6">
+          <h3
+            class="font-mono text-sm tracking-[0.14em] uppercase"
+            style="color: var(--tone-accent)"
+          >
+            Playing
+          </h3>
+          <p class="mt-3 text-sm text-(--text-muted)">
+            Guitar, loudly. Anything from Metallica to classical pieces.
+          </p>
+        </div>
+      </article>
+
       {interests.map((interest) => (
         <article class="surface-card overflow-hidden">
-          <div class="aspect-4/3 overflow-hidden border-b border-(--surface-border)">
+          <div class="aspect-video overflow-hidden border-b border-(--surface-border)">
             <Image
               src={interest.image}
               alt={interest.alt}
-              width={560}
-              height={420}
+              width={640}
+              height={360}
               loading="lazy"
               class="size-full object-cover"
             />
@@ -181,8 +137,9 @@ const interests = [
 
       <Prompt label="say hello" cursor />
       <h2 class="mt-4 text-3xl font-semibold sm:text-4xl">Get in touch</h2>
-      <p class="mx-auto mt-4 max-w-md text-(--text-muted)">
-        I'm always happy to talk about developer tools, Linux on Windows, or what you're building.
+      <p class="mx-auto mt-4 max-w-lg text-(--text-muted)">
+        Speaking invitations, running open source inside a big company, or where developer tools go
+        next — I'm glad to talk about any of it.
       </p>
 
       <div class="mt-8 flex flex-wrap justify-center gap-3">

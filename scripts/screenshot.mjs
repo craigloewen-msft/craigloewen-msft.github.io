@@ -39,6 +39,17 @@ for (const shot of shots) {
   await page.evaluate(() => {
     document.querySelectorAll('[data-reveal]').forEach((el) => el.classList.add('is-revealed'));
   });
+
+  // Walk the page so lazy-loaded images below the fold actually resolve.
+  await page.evaluate(async () => {
+    const step = window.innerHeight;
+    for (let y = 0; y < document.body.scrollHeight; y += step) {
+      window.scrollTo(0, y);
+      await new Promise((resolve) => setTimeout(resolve, 120));
+    }
+    window.scrollTo(0, 0);
+  });
+  await page.waitForLoadState('networkidle');
   await page.waitForTimeout(600);
 
   await page.screenshot({ path: `${OUT}/${shot.name}.png`, fullPage: shot.full });

@@ -1,0 +1,237 @@
+---
+import { LAND_PATH, WORLD, project } from '@/lib/world-map';
+import type { SpeakingCity, SpeakingStats } from '@/lib/speaking';
+
+interface Props {
+  cities: SpeakingCity[];
+  stats: SpeakingStats;
+}
+
+const { cities, stats } = Astro.props;
+
+const most = Math.max(...cities.map((c) => c.talks.length), 1);
+// Area scales with the count, so a city with 4x the talks looks 4x the dot.
+const radius = (count: number) => 4.5 + 7 * Math.sqrt(count / most);
+
+const pins = cities.map((city) => ({
+  ...city,
+  ...project(city.lon, city.lat),
+  r: radius(city.talks.length),
+}));
+---
+
+<div class="surface-card overflow-hidden" data-map>
+  <div class="relative">
+    <svg
+      viewBox={`0 0 ${WORLD.width} ${WORLD.height}`}
+      class="block w-full"
+      role="img"
+      aria-label={`Map of ${stats.cities} cities where Craig has spoken, across ${stats.countries} countries.`}
+    >
+      <defs>
+        <radialGradient id="pin-glow">
+          <stop offset="0%" stop-color="var(--tone-accent)" stop-opacity="0.5"></stop>
+          <stop offset="100%" stop-color="var(--tone-accent)" stop-opacity="0"></stop>
+        </radialGradient>
+      </defs>
+
+      <path
+        d={LAND_PATH}
+        fill="var(--color-ink-700)"
+        stroke="var(--color-ink-400)"
+        stroke-width="0.8"
+        stroke-linejoin="round"
+      ></path>
+
+      {pins.map((pin) => (
+        <g
+          class="pin cursor-pointer focus:outline-none"
+          data-city={pin.city}
+          tabindex="0"
+          role="button"
+          aria-label={`${pin.city}, ${pin.country} — ${pin.talks.length} ${pin.talks.length === 1 ? 'talk' : 'talks'}`}
+        >
+          <circle cx={pin.x} cy={pin.y} r={pin.r * 3} fill="url(#pin-glow)" class="pin-glow" />
+          {/* Generous invisible hit area — the visible dots are small on mobile. */}
+          <circle cx={pin.x} cy={pin.y} r={Math.max(pin.r + 8, 14)} fill="transparent" />
+          <circle
+            cx={pin.x}
+            cy={pin.y}
+            r={pin.r}
+            fill="var(--tone-accent)"
+            fill-opacity="0.22"
+            stroke="var(--tone-accent)"
+            stroke-width="1.4"
+            class="pin-dot"
+          />
+        </g>
+      ))}
+    </svg>
+  </div>
+
+  <div class="border-t border-(--surface-border) p-6 sm:p-7">
+    {/* Replaced in place as pins are hovered or focused. */}
+    <div data-map-panel>
+      <p class="kicker">Where I've spoken</p>
+      <p class="mt-3 text-(--text-secondary)">
+        {stats.talks} talks since {stats.firstYear} — {stats.cities} cities across {stats.countries}{' '}
+        countries, plus {stats.online} online. Hover a marker for the talks I gave there.
+      </p>
+    </div>
+
+    <ul class="mt-6 flex flex-wrap gap-2">
+      {cities.map((city) => (
+        <li>
+          <button
+            type="button"
+            data-city-chip={city.city}
+            class="rounded-lg border border-(--surface-border) px-2.5 py-1 font-mono text-[11px] text-(--text-muted) transition-colors hover:border-(--tone-accent) hover:text-(--tone-accent) aria-pressed:border-(--tone-accent) aria-pressed:text-(--tone-accent)"
+            aria-pressed="false"
+          >
+            {city.city}
+            <span class="ml-1.5 opacity-60">{city.talks.length}</span>
+          </button>
+        </li>
+      ))}
+    </ul>
+  </div>
+</div>
+
+{/* The panel is rendered client-side from this, so the markup stays small. */}
+<script
+  is:inline
+  type="application/json"
+  data-map-data
+  set:html={JSON.stringify(
+    Object.fromEntries(
+      cities.map((c) => [
+        c.city,
+        { country: c.country, talks: c.talks.map((t) => [t.title, t.conference ?? '', t.year]) },
+      ]),
+    ),
+  )}
+></script>
+<style>
+  .pin-dot {
+    transition:
+      fill-opacity 0.25s var(--ease-out-expo),
+      r 0.25s var(--ease-out-expo);
+  }
+  .pin-glow {
+    opacity: 0;
+    transition: opacity 0.25s var(--ease-out-expo);
+  }
+  .pin:hover .pin-dot,
+  .pin:focus-visible .pin-dot,
+  .pin[data-active] .pin-dot {
+    fill-opacity: 0.85;
+  }
+  .pin:hover .pin-glow,
+  .pin:focus-visible .pin-glow,
+  .pin[data-active] .pin-glow {
+    opacity: 1;
+  }
+  .pin:focus-visible .pin-dot {
+    stroke-width: 3;
+  }
+</style>
+
+<script>
+  interface CityData {
+    country: string;
+    /** [title, conference, year] — packed to keep the inline JSON small. */
+    talks: [string, string, number][];
+  }
+
+  function initMap() {
+    const root = document.querySelector<HTMLElement>('[data-map]');
+    if (!root || root.dataset.mapReady) return;
+    root.dataset.mapReady = 'true';
+
+    const dataEl = document.querySelector<HTMLScriptElement>('[data-map-data]');
+    const panelEl = root.querySelector<HTMLElement>('[data-map-panel]');
+    if (!dataEl || !panelEl) return;
+
+    // Re-bound to a non-nullable local so the closures below don't have to re-check.
+    const panel: HTMLElement = panelEl;
+
+    const data: Record<string, CityData> = JSON.parse(dataEl.textContent || '{}');
+    const summary = panel.innerHTML;
+    const pins = [...root.querySelectorAll<SVGGElement>('.pin')];
+    const chips = [...root.querySelectorAll<HTMLButtonElement>('[data-city-chip]')];
+
+    // Keep the panel from collapsing and jumping the page as content swaps.
+    panel.style.minHeight = `${panel.offsetHeight}px`;
+
+    let pinned: string | null = null;
+
+    const escape = (s: string) =>
+      s.replace(
+        /[&<>"]/g,
+        (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c] as string,
+      );
+
+    function show(city: string | null) {
+      const name = city ?? pinned;
+      if (!name || !data[name]) {
+        panel.innerHTML = summary;
+      } else {
+        const entry = data[name];
+        const rows = entry.talks
+          .map(
+            ([title, conference, year]) => `
+              <li class="flex gap-x-4 gap-y-1 flex-col sm:flex-row sm:items-baseline py-2">
+                <span class="flex-1 text-sm text-(--text-secondary)">${escape(title)}</span>
+                <span class="shrink-0 font-mono text-xs text-(--text-muted)">${escape(
+                  [conference, String(year)].filter(Boolean).join(' · '),
+                )}</span>
+              </li>`,
+          )
+          .join('');
+
+        panel.innerHTML = `
+          <p class="kicker">${escape(name)}, ${escape(entry.country)}</p>
+          <ul class="mt-2 divide-y divide-(--surface-border)">${rows}</ul>`;
+      }
+
+      for (const pin of pins) {
+        pin.toggleAttribute('data-active', pin.dataset.city === name);
+      }
+      for (const chip of chips) {
+        chip.setAttribute('aria-pressed', String(chip.dataset.cityChip === pinned));
+      }
+    }
+
+    for (const pin of pins) {
+      const city = pin.dataset.city ?? null;
+      pin.addEventListener('mouseenter', () => show(city));
+      pin.addEventListener('mouseleave', () => show(null));
+      pin.addEventListener('focus', () => show(city));
+      pin.addEventListener('blur', () => show(null));
+      const select = () => {
+        pinned = pinned === city ? null : city;
+        show(pinned);
+      };
+      pin.addEventListener('click', select);
+      pin.addEventListener('keydown', (event) => {
+        if (event.key === 'Enter' || event.key === ' ') {
+          event.preventDefault();
+          select();
+        }
+      });
+    }
+
+    for (const chip of chips) {
+      const city = chip.dataset.cityChip ?? null;
+      chip.addEventListener('mouseenter', () => show(city));
+      chip.addEventListener('mouseleave', () => show(null));
+      chip.addEventListener('click', () => {
+        pinned = pinned === city ? null : city;
+        show(pinned);
+      });
+    }
+  }
+
+  initMap();
+  document.addEventListener('astro:page-load', initMap);
+</script>

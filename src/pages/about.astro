@@ -6,60 +6,107 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
 import PageHeader from '@/components/PageHeader.astro';
 import ActionLink from '@/components/ActionLink.astro';
 import SectionHeading from '@/components/SectionHeading.astro';
-import { site, socials } from '@/lib/site';
+import Icon from '@/components/Icon.astro';
+import { beliefs, bio, site, socials, spellOut, yearsSince } from '@/lib/site';
+import { work } from '@/lib/work';
+import { getSpeaking } from '@/lib/speaking';
 
-import portrait from '@/assets/img/WaterlooPhoto.jpg';
-import wsltalk from '@/assets/img/wsltalk.jpg';
-import panel from '@/assets/img/panel.jpg';
-import developerTalk from '@/assets/img/developer-talk.jpg';
+/*
+ * The closest thing to a headshot in the set — face large, lit and front-on, so
+ * it survives the square crop. Every other photo on the site is used once, and
+ * the wider Ubuntu Summit shots carry the homepage and the talk gallery.
+ */
+import portrait from '@/assets/img/speaking-closeup.jpg';
 
-const talks = await getCollection('talks');
+const { stats } = await getSpeaking();
+const projects = await getCollection('projects');
+const years = spellOut(yearsSince());
 
-const stage = [
-  { image: wsltalk, alt: 'Craig giving a talk about WSL' },
-  { image: panel, alt: 'Craig speaking on a panel' },
-  { image: developerTalk, alt: 'Craig presenting to developers' },
+/** The career in the order it happened. */
+const timeline = [
+  {
+    period: 'Aug 2018 — present',
+    title: 'Principal Product Manager · Microsoft',
+    body: 'Product owner for the Windows Subsystem for Linux and other developer features in Windows. Built the multi-year vision, owned the team’s OKRs and success metrics, and worked across Microsoft to ship platform features like Linux GUI app support and enterprise management through Intune and Defender for Endpoint.',
+  },
+  {
+    period: 'May 2017 — Aug 2017',
+    title: 'Product Manager intern · Microsoft',
+    body: 'Windows Console. Wrote functional specs for six features, and proposed and implemented the change to the operating system’s default console colours — the first thing I shipped that The Verge wrote about.',
+  },
+  {
+    period: 'Sep 2016 — Dec 2016',
+    title: 'Process Engineering student · General Motors',
+    body: 'Built a camera system that recognised and sorted defects automatically using optical recognition and PLC logic, and wrote a C# tool that turned OEM machine code into readable quality reports.',
+  },
+  {
+    period: 'Jan 2016 — Apr 2016',
+    title: 'Quality Engineering student · Siemens, Konstanz',
+    body: 'Designed and built a tool calibration system and device that cut calibration time by 40%.',
+  },
+  {
+    period: 'Sep 2013 — May 2018',
+    title: 'BASc Mechatronics Engineering · University of Waterloo',
+    body: 'Co-operative programme with a management sciences option. Graduated ranked first in a class of 110 engineering students.',
+  },
+];
+
+const recognition = [
+  {
+    title: 'Granted patent — AI-powered Windows clipboard',
+    body: 'Named inventor. I wrote the working prototype in C#; it shipped in PowerToys as Advanced Paste and was covered by The Verge and Windows Central.',
+  },
+  {
+    title: 'James Dyson Award, national winner for Canada (2018)',
+    body: 'For WatVision, an open source system that lets a visually impaired person use any touch screen with the help of a smartphone. Also won the General Motors innovation award.',
+  },
+  {
+    title: 'First in class of 110',
+    body: 'Mechatronics Engineering, University of Waterloo.',
+  },
+  {
+    title: 'Languages',
+    body: 'Advanced Korean, conversational French and German.',
+  },
 ];
 ---
 
-<BaseLayout
-  title="About"
-  description="Craig Loewen is a Product Manager at Microsoft working on the Windows Subsystem for Linux, and a Mechatronics Engineering graduate from the University of Waterloo."
-  path="/about"
-  image="/og/about.png"
->
+<BaseLayout title="About" description={bio.short} path="/about" image="/og/about.png">
   <PageHeader kicker="about" title="About me" />
 
   <div class="mx-auto max-w-6xl px-5 py-16 sm:px-8 sm:py-20">
     <div class="grid gap-12 lg:grid-cols-[1.3fr_0.7fr] lg:gap-16">
       <div class="space-y-5 text-lg text-(--text-secondary)">
         <p>
-          My name's Craig Loewen. I'm a Product Manager at Microsoft, and before that I studied
-          Mechatronics Engineering at the University of Waterloo.
+          I'm a Principal Product Manager at Microsoft. I own the Windows Subsystem for Linux — how
+          millions of developers run Linux on Windows — along with parts of the Windows developer
+          experience.
         </p>
         <p>
-          I pride myself on being a cross-discipline problem solver. I've worked across a wide range
-          of industries, from automotive to software, and across a wide range of skills, from
-          development to management. I enjoy designing, creating, and leaving things better than I
-          found them.
+          I've spent {years} years on essentially one problem, which is unusual for a product
+          manager and is the thing I'd most defend about my career. Depth is what let me argue for
+          the expensive decisions: rebuilding WSL on a real Linux kernel rather than emulating one,
+          treating enterprise controls as a feature rather than a tax, and eventually making the
+          case that the whole thing should be open source.
         </p>
         <p>
-          These days most of my time goes to the{' '}
-          <strong class="text-(--text-primary)">Windows Subsystem for Linux</strong>, which is now
-          fully open source, and to the broader question of what developer tools should look like in
-          a world with capable coding agents.
+          Most of what I do now doesn't ship with my name on it. It's the strategy documents, the
+          reviews, and the shared vocabulary that let a dozen teams make consistent decisions
+          without me in the room. I'm most useful on the problems that are ambiguous, cross-team and
+          politically expensive.
         </p>
         <p>
-          I'm a South African Canadian, and I've lived in Europe, Africa and Canada. Outside work
-          you'll find me weight lifting, playing guitar, or hiking.
+          I trained as a mechatronics engineer, which is why I still build the prototype when
+          arguing about it would take longer. I'm South African and Canadian, and I've lived in
+          Africa, Europe and North America.
         </p>
 
         <div class="flex flex-wrap gap-3 pt-4">
           <ActionLink href={site.resume} icon="document" analytics="see_resume" external>
-            Download my resume
+            Resume
           </ActionLink>
           <ActionLink href="/writing" variant="ghost" icon="mic">
-            {talks.length} talks
+            {stats.talks} talks in {stats.countries} countries
           </ActionLink>
         </div>
       </div>
@@ -67,36 +114,155 @@ const stage = [
       <div>
         <Image
           src={portrait}
-          alt="Craig Loewen"
-          width={640}
-          height={800}
+          alt="Craig Loewen speaking at a lectern"
+          width={720}
+          height={720}
           loading="eager"
-          class="w-full rounded-2xl border border-(--surface-border) object-cover"
+          class="aspect-square w-full rounded-2xl border border-(--surface-border) object-cover"
         />
       </div>
     </div>
 
+    {/* What I work on */}
     <section class="mt-24" data-reveal>
-      <SectionHeading
-        kicker="on stage"
-        title="Out in the world"
-        href="/writing"
-        hrefLabel="All talks"
-      />
-      <div class="mt-10 grid gap-5 sm:grid-cols-3">
-        {stage.map((shot) => (
-          <Image
-            src={shot.image}
-            alt={shot.alt}
-            width={560}
-            height={380}
-            loading="lazy"
-            class="aspect-4/3 w-full rounded-xl border border-(--surface-border) object-cover"
-          />
+      <SectionHeading kicker="work" title="What I work on" />
+
+      <p class="mt-5 max-w-2xl text-(--text-muted)">
+        Three areas, one thesis: the machine in front of a developer should disappear. Everything
+        below links to something public.
+      </p>
+
+      <div class="mt-10 space-y-5">
+        {work.map((area) => (
+          <article class="surface-card p-8">
+            <div class="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-2">
+              <h3 class="text-xl font-semibold sm:text-2xl">{area.name}</h3>
+              <p class="font-mono text-xs text-(--text-muted)">
+                {area.role} · {area.period}
+              </p>
+            </div>
+
+            <p class="mt-4 max-w-3xl text-(--text-secondary)">{area.summary}</p>
+
+            <ul class="mt-6 space-y-3">
+              {area.outcomes.map((outcome) => (
+                <li class="flex gap-3 text-sm text-(--text-muted)">
+                  <Icon name="arrowRight" size={14} class="mt-1 shrink-0 text-(--tone-accent)" />
+                  <span>{outcome}</span>
+                </li>
+              ))}
+            </ul>
+
+            <ul class="mt-7 flex flex-wrap gap-2">
+              {area.links.map((link) => (
+                <li>
+                  <a
+                    href={link.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    data-analytics="work_link"
+                    class="group inline-flex items-center gap-1.5 rounded-lg border border-(--surface-border) px-3 py-1.5 font-mono text-xs text-(--text-muted) transition-colors hover:border-(--tone-accent) hover:text-(--tone-accent)"
+                  >
+                    {link.label}
+                    <Icon name="arrowUpRight" size={12} class="opacity-60" />
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </article>
         ))}
       </div>
     </section>
 
+    {/* Career */}
+    <section class="mt-24" data-reveal>
+      <SectionHeading kicker="background" title="How I got here" />
+
+      <ol class="mt-10 border-l border-(--surface-border)">
+        {timeline.map((entry) => (
+          <li class="relative pb-10 pl-8 last:pb-0">
+            <span
+              aria-hidden="true"
+              class="absolute top-2 -left-[4.5px] size-2 rounded-full"
+              style="background: var(--tone-accent)"
+            />
+            <p class="font-mono text-xs text-(--text-muted)">{entry.period}</p>
+            <h3 class="mt-2 text-lg font-semibold">{entry.title}</h3>
+            <p class="mt-2 max-w-2xl text-(--text-muted)">{entry.body}</p>
+          </li>
+        ))}
+      </ol>
+    </section>
+
+    {/* Recognition */}
+    <section class="mt-24" data-reveal>
+      <SectionHeading kicker="recognition" title="Patents and awards" />
+
+      <div class="mt-10 grid gap-5 sm:grid-cols-2">
+        {recognition.map((entry) => (
+          <article class="surface-card p-7">
+            <h3 class="text-base font-semibold">{entry.title}</h3>
+            <p class="mt-3 text-sm text-(--text-muted)">{entry.body}</p>
+          </article>
+        ))}
+      </div>
+    </section>
+
+    {/* Beliefs */}
+    <section class="mt-24" data-reveal>
+      <SectionHeading kicker="opinions" title="How I think about developer tools" />
+
+      <ol class="mt-10 grid gap-px overflow-hidden rounded-xl border border-(--surface-border) bg-(--surface-border) sm:grid-cols-2">
+        {beliefs.map((belief, i) => (
+          <li class="flex gap-4 bg-(--surface-raised) p-7">
+            <span class="font-mono text-xs text-(--text-muted)">
+              {String(i + 1).padStart(2, '0')}
+            </span>
+            <p class="text-(--text-secondary)">{belief}</p>
+          </li>
+        ))}
+      </ol>
+    </section>
+
+    {/* Press kit */}
+    <section class="mt-24" data-reveal>
+      <SectionHeading kicker="press kit" title="If you need a bio" />
+      <div class="surface-card mt-8 p-8">
+        <p class="text-(--text-secondary)">{bio.long}</p>
+
+        <button
+          type="button"
+          data-copy-bio
+          data-bio={bio.long}
+          class="mt-7 inline-flex items-center gap-2 rounded-lg border border-(--surface-border) px-3.5 py-2 font-mono text-xs text-(--text-muted) transition-colors hover:border-(--tone-accent) hover:text-(--tone-accent)"
+        >
+          Copy bio
+        </button>
+      </div>
+    </section>
+
+    {/* Archive */}
+    <section class="mt-24" data-reveal>
+      <SectionHeading kicker="archive" title="Before all this" />
+      <p class="mt-5 max-w-2xl text-(--text-muted)">
+        {projects.length} engineering projects from university and my work terms — an award-winning
+        accessibility device, a quadcopter, a neural network that learned to play a phone game, and
+        a couple of production lines. None of it is what I do now, but it's how I learned to build.
+      </p>
+      <a
+        href="/projects"
+        class="group mt-6 inline-flex items-center gap-1.5 font-mono text-sm text-(--text-muted) transition-colors hover:text-(--tone-accent)"
+      >
+        Browse the archive
+        <Icon
+          name="arrowRight"
+          size={16}
+          class="transition-transform duration-300 group-hover:translate-x-1"
+        />
+      </a>
+    </section>
+
+    {/* Contact */}
     <section class="mt-24" data-reveal>
       <SectionHeading kicker="contact" title="Find me elsewhere" />
       <div class="mt-8 flex flex-wrap gap-3">
@@ -115,3 +281,25 @@ const stage = [
     </section>
   </div>
 </BaseLayout>
+
+<script>
+  function initCopyBio() {
+    const button = document.querySelector<HTMLButtonElement>('[data-copy-bio]');
+    if (!button || button.dataset.copyReady) return;
+    button.dataset.copyReady = 'true';
+
+    const label = button.textContent;
+    button.addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText(button.dataset.bio ?? '');
+        button.textContent = 'Copied';
+      } catch {
+        button.textContent = 'Press Ctrl+C to copy';
+      }
+      setTimeout(() => (button.textContent = label), 2000);
+    });
+  }
+
+  initCopyBio();
+  document.addEventListener('astro:page-load', initCopyBio);
+</script>

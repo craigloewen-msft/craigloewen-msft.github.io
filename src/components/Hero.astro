@@ -3,7 +3,13 @@ import { Image } from 'astro:assets';
 import { site, socials } from '@/lib/site';
 import ActionLink from './ActionLink.astro';
 import Icon from './Icon.astro';
-import portrait from '@/assets/img/WaterlooPhoto.jpg';
+
+/*
+ * Ubuntu Summit 2023, Riga. The wide stage shot goes here because the hero slot
+ * is landscape and the lectern branding gives the photo its own caption; the
+ * front-on gesture shot from the same talk carries /about.
+ */
+import portrait from '@/assets/img/talk-stage.jpg';
 ---
 
 <section class="grain relative overflow-hidden">
@@ -20,12 +26,13 @@ import portrait from '@/assets/img/WaterlooPhoto.jpg';
     ></div>
   </div>
 
-  <div class="mx-auto max-w-6xl px-5 pt-32 pb-20 sm:px-8 sm:pt-40 sm:pb-28">
-    <div class="grid items-center gap-12 lg:grid-cols-[1.15fr_0.85fr] lg:gap-16">
+  <div class="mx-auto max-w-6xl px-5 pt-32 pb-16 sm:px-8 sm:pt-40 sm:pb-20">
+    <div class="grid items-center gap-12 lg:grid-cols-[1.05fr_0.95fr] lg:gap-14">
       <div>
         <p class="flex items-center gap-1.5 font-mono text-xs tracking-[0.14em] uppercase">
           <span aria-hidden="true" style="color: var(--tone-accent)">
-            ~$
+            {' '}
+            ~${' '}
           </span>
           <span class="text-(--text-muted)">whoami</span>
           <span
@@ -40,24 +47,17 @@ import portrait from '@/assets/img/WaterlooPhoto.jpg';
         </h1>
 
         <p class="mt-5 max-w-xl text-lg text-(--text-secondary) sm:text-xl">
-          I build developer tools at Microsoft — currently the{' '}
-          <span class="text-(--text-primary)">Windows Subsystem for Linux</span>, now fully open
-          source.
+          Principal Product Manager at Microsoft. I own the{' '}
+          <span class="text-(--text-primary)">Windows Subsystem for Linux</span> — how millions of
+          developers run Linux on Windows — and parts of the Windows developer experience.
         </p>
 
-        <p class="mt-4 max-w-xl text-(--text-muted)">
-          Mechatronics engineer turned product manager. I’m passionate about building tools that get
-          out of the way and let people focus on what they’re trying to create. I’m lucky enough to
-          spend my time building those things, talking to the people who use them, and occasionally
-          sharing what we’ve learned on stage.
-        </p>
-
-        <div class="mt-8 flex flex-col items-start gap-3">
+        <div class="mt-8 flex flex-wrap items-center gap-3">
           <ActionLink href={site.resume} icon="document" analytics="see_resume" external>
             Resume
           </ActionLink>
-          <ActionLink href="/writing" variant="ghost" icon="pen">
-            See my writings &amp; talks
+          <ActionLink href="/writing" variant="ghost" icon="mic">
+            Writing & talks
           </ActionLink>
         </div>
 
@@ -79,7 +79,7 @@ import portrait from '@/assets/img/WaterlooPhoto.jpg';
         </ul>
       </div>
 
-      <div class="relative mx-auto w-full max-w-sm lg:max-w-none">
+      <figure class="relative mx-auto w-full max-w-xl lg:max-w-none">
         <div
           class="absolute -inset-3 -z-10 rounded-2xl blur-2xl"
           style="background: var(--glow-accent)"
@@ -87,14 +87,17 @@ import portrait from '@/assets/img/WaterlooPhoto.jpg';
         ></div>
         <Image
           src={portrait}
-          alt="Craig Loewen"
-          width={720}
+          alt="Craig Loewen presenting from the lectern at Ubuntu Summit 2023"
+          width={1200}
           height={900}
           loading="eager"
           fetchpriority="high"
-          class="w-full rounded-2xl border border-(--surface-border) object-cover shadow-2xl"
+          class="aspect-4/3 w-full rounded-2xl border border-(--surface-border) object-cover shadow-2xl"
         />
-      </div>
+        <figcaption class="mt-3 font-mono text-xs text-(--text-muted)">
+          Ubuntu Summit 2023 · Riga, Latvia
+        </figcaption>
+      </figure>
     </div>
   </div>
 </section>

@@ -131,6 +131,13 @@ check(
   'nav label reads "Writing & talks"',
   /writing & talks/i.test(await nav.locator('a[href="/writing"]').first().innerText()),
 );
+// Writing and speaking are one page; the header should stay at two destinations
+// (each rendered twice — desktop and mobile).
+check(
+  'nav stays down to two destinations',
+  (await nav.locator('a[href^="/"]').count()) === 4,
+  `${await nav.locator('a[href^="/"]').count()} links`,
+);
 
 const search = page.locator('[data-stream-search]');
 await search.fill('WSL');
@@ -196,15 +203,27 @@ await page.locator('[data-stream-filter="all"]').click();
 await page.waitForTimeout(300);
 check('resetting restores all items', (await visible()) === total);
 
-// Projects left the header, so the homepage scroll must still reach it.
-await page.goto(`${BASE}/`, { waitUntil: 'networkidle' });
+// The pre-Microsoft project archive left both the header and the homepage, so
+// /about is now the only route to it. That link has to keep working.
+await page.goto(`${BASE}/about`, { waitUntil: 'networkidle' });
 check(
-  'homepage still links to /projects',
+  'about links to the project archive',
   (await page.locator('main a[href="/projects"]').count()) > 0,
 );
 await page.locator('main a[href="/projects"]').first().click();
 await page.waitForURL('**/projects');
-check('that link reaches the projects page', new URL(page.url()).pathname === '/projects');
+check('that link reaches the archive page', new URL(page.url()).pathname === '/projects');
+
+// The homepage leads with current work, not the old projects grid.
+await page.goto(`${BASE}/`, { waitUntil: 'networkidle' });
+check(
+  'homepage no longer leads with old projects',
+  (await page.locator('main a[href^="/projects"]').count()) === 0,
+);
+check(
+  'homepage sends talk traffic to the merged page',
+  (await page.locator('main a[href="/writing"]').count()) > 0,
+);
 await page.goto(`${BASE}/writing`, { waitUntil: 'networkidle' });
 
 // ---------- Progressive enhancement ----------
@@ -222,6 +241,7 @@ await noJs.close();
 // ---------- Legacy routes ----------
 for (const [from, to] of [
   ['/talks', '/writing'],
+  ['/speaking', '/writing'],
   ['/activity', '/writing'],
   ['/allposts', '/writing'],
 ]) {
@@ -282,6 +302,87 @@ for (const path of ['/', '/writing', '/projects', '/about']) {
   const missing = await page.$$eval('img:not([alt])', (els) => els.length);
   check(`all images on ${path} have alt text`, missing === 0, `${missing} missing`);
 }
+
+// ---------- Speaking map ----------
+await page.goto(`${BASE}/writing`, { waitUntil: 'networkidle' });
+const pins = page.locator('.pin');
+const mapPanel = page.locator('[data-map-panel]');
+const pinCount = await pins.count();
+check('speaking map renders a pin per city', pinCount > 0, `${pinCount} pins`);
+check('map is server-rendered, not fetched', (await page.locator('svg path[d^="M"]').count()) > 0);
+
+const summaryText = (await mapPanel.innerText()).trim();
+await page.locator('.pin[data-city="Seoul"]').hover();
+await page.waitForTimeout(250);
+const hovered = (await mapPanel.innerText()).trim();
+check('hovering a pin shows that city’s talks', /seoul/i.test(hovered) && hovered !== summaryText);
+
+await page.locator('.pin[data-city="London"]').focus();
+await page.waitForTimeout(250);
+check(
+  'pins are keyboard focusable and update the panel',
+  /london/i.test(await mapPanel.innerText()),
+);
+
+await page.locator('[data-city-chip="Riga"]').click();
+await page.waitForTimeout(250);
+check(
+  'city chips pin a selection',
+  (await page.locator('[data-city-chip="Riga"]').getAttribute('aria-pressed')) === 'true' &&
+    /riga/i.test(await mapPanel.innerText()),
+);
+
+const noJsSpeakingCtx = await browser.newContext({ javaScriptEnabled: false });
+const noJsSpeaking = await noJsSpeakingCtx.newPage();
+await noJsSpeaking.goto(`${BASE}/writing`, { waitUntil: 'domcontentloaded' });
+check(
+  'map and city list render without JavaScript',
+  (await noJsSpeaking.locator('.pin').count()) === pinCount &&
+    (await noJsSpeaking.locator('[data-city-chip]').count()) === pinCount,
+);
+await noJsSpeakingCtx.close();
+
+// ---------- Guitar video facade ----------
+await page.goto(`${BASE}/`, { waitUntil: 'networkidle' });
+await page.locator('#beyond').scrollIntoViewIfNeeded();
+await page.waitForTimeout(800);
+
+const thirdParty = [];
+page.on('request', (r) => {
+  if (/youtube|ytimg/.test(r.url())) thirdParty.push(r.url());
+});
+
+check(
+  'video shows a local poster, not a YouTube request',
+  thirdParty.length === 0 && (await page.locator('.video-embed img').count()) === 1,
+  `${thirdParty.length} third-party requests`,
+);
+check(
+  'offline photos all load',
+  (await page.$$eval('#beyond img', (els) =>
+    els.every((e) => e.complete && e.naturalWidth > 0),
+  )) === true,
+);
+
+await page.locator('[data-video-trigger]').click();
+await page.waitForTimeout(1200);
+const embedded = await page.locator('.video-embed iframe').getAttribute('src');
+check(
+  'clicking play swaps in the privacy-mode player',
+  (embedded ?? '').startsWith('https://www.youtube-nocookie.com/embed/'),
+  embedded ?? 'no iframe',
+);
+
+const noJsVideoCtx = await browser.newContext({ javaScriptEnabled: false });
+const noJsVideo = await noJsVideoCtx.newPage();
+await noJsVideo.goto(`${BASE}/`, { waitUntil: 'domcontentloaded' });
+check(
+  'video degrades to a YouTube link without JavaScript',
+  /youtube\.com\/watch\?v=/.test(
+    (await noJsVideo.locator('[data-video-trigger]').getAttribute('href')) ?? '',
+  ),
+);
+await noJsVideoCtx.close();
 
 check('no console or page errors', errors.length === 0, errors.slice(0, 3).join(' | '));
 
