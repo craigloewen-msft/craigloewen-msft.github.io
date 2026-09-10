@@ -1,17 +1,17 @@
-- title: Moonray (Collaborative talk about Dreamworks movie rendering engine with WSLc)
+- title: Rendering DreamWorks films with MoonRay and WSL
   conference: SIGGRAPH 2026
   location: Los Angeles, California
   date: 2026-07-20
 
 - title: WSL improvements and the new Containers CLI and APIs
   conference: BUILD 2026
-  location: San Franciso, California
+  location: San Francisco, California
   date: 2026-06-02
   url: https://www.youtube.com/watch?v=i0M13ZvL04M
 
 - title: Build and ship faster with a developer-optimized experience on Windows
   conference: BUILD 2026
-  location: San Franciso, California
+  location: San Francisco, California
   date: 2026-06-02
   url: https://www.youtube.com/watch?v=V6mdr7Lw1TA
 
@@ -21,7 +21,7 @@
   date: 2025-11-20
   url: https://www.youtube.com/watch?v=mJQxAKYkCBk
 
-- title: Engineering in the open- Deep dive into open sourcing WSL
+- title: 'Engineering in the open: a deep dive into open sourcing WSL'
   conference: Ubuntu Summit 2025
   location: London, England
   date: 2025-10-24
@@ -87,7 +87,7 @@
   date: 2024-05-29
   url: https://www.youtube.com/watch?v=3cIFHrJX0gg
 
-- title: Zero to Hero - Develop your first app with Local LLMs on Windows
+- title: 'Zero to Hero: develop your first app with local LLMs on Windows'
   conference: BUILD 2024
   location: Seattle, WA
   date: 2024-05-29

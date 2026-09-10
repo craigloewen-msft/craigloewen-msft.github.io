@@ -128,8 +128,14 @@ check(
   `${await page.locator('header a[href="/writing"]').count()} links`,
 );
 check(
-  'nav label reads "Writing & talks"',
-  /writing & talks/i.test(await nav.locator('a[href="/writing"]').first().innerText()),
+  'nav label reads "Writing"',
+  /^writing$/i.test((await nav.locator('a[href="/writing"]').first().innerText()).trim()),
+);
+// Speaking is its own destination now that talks are the headline credential.
+check(
+  'nav links to the speaking page',
+  (await page.locator('header a[href="/speaking"]').count()) === 2,
+  `${await page.locator('header a[href="/speaking"]').count()} links`,
 );
 
 const search = page.locator('[data-stream-search]');
@@ -196,15 +202,27 @@ await page.locator('[data-stream-filter="all"]').click();
 await page.waitForTimeout(300);
 check('resetting restores all items', (await visible()) === total);
 
-// Projects left the header, so the homepage scroll must still reach it.
-await page.goto(`${BASE}/`, { waitUntil: 'networkidle' });
+// The pre-Microsoft project archive left both the header and the homepage, so
+// /about is now the only route to it. That link has to keep working.
+await page.goto(`${BASE}/about`, { waitUntil: 'networkidle' });
 check(
-  'homepage still links to /projects',
+  'about links to the project archive',
   (await page.locator('main a[href="/projects"]').count()) > 0,
 );
 await page.locator('main a[href="/projects"]').first().click();
 await page.waitForURL('**/projects');
-check('that link reaches the projects page', new URL(page.url()).pathname === '/projects');
+check('that link reaches the archive page', new URL(page.url()).pathname === '/projects');
+
+// The homepage leads with current work, not the old projects grid.
+await page.goto(`${BASE}/`, { waitUntil: 'networkidle' });
+check(
+  'homepage no longer leads with old projects',
+  (await page.locator('main a[href^="/projects"]').count()) === 0,
+);
+check(
+  'homepage sends speaking traffic to /speaking',
+  (await page.locator('main a[href="/speaking"]').count()) > 0,
+);
 await page.goto(`${BASE}/writing`, { waitUntil: 'networkidle' });
 
 // ---------- Progressive enhancement ----------
@@ -277,11 +295,50 @@ await page.keyboard.press('Tab');
 const skip = await page.evaluate(() => document.activeElement?.textContent?.trim() ?? '');
 check('first Tab lands on the skip link', /skip/i.test(skip), skip);
 
-for (const path of ['/', '/writing', '/projects', '/about']) {
+for (const path of ['/', '/writing', '/speaking', '/projects', '/about']) {
   await page.goto(`${BASE}${path}`, { waitUntil: 'networkidle' });
   const missing = await page.$$eval('img:not([alt])', (els) => els.length);
   check(`all images on ${path} have alt text`, missing === 0, `${missing} missing`);
 }
+
+// ---------- Speaking map ----------
+await page.goto(`${BASE}/speaking`, { waitUntil: 'networkidle' });
+const pins = page.locator('.pin');
+const mapPanel = page.locator('[data-map-panel]');
+const pinCount = await pins.count();
+check('speaking map renders a pin per city', pinCount > 0, `${pinCount} pins`);
+check('map is server-rendered, not fetched', (await page.locator('svg path[d^="M"]').count()) > 0);
+
+const summaryText = (await mapPanel.innerText()).trim();
+await page.locator('.pin[data-city="Seoul"]').hover();
+await page.waitForTimeout(250);
+const hovered = (await mapPanel.innerText()).trim();
+check('hovering a pin shows that city’s talks', /seoul/i.test(hovered) && hovered !== summaryText);
+
+await page.locator('.pin[data-city="London"]').focus();
+await page.waitForTimeout(250);
+check(
+  'pins are keyboard focusable and update the panel',
+  /london/i.test(await mapPanel.innerText()),
+);
+
+await page.locator('[data-city-chip="Riga"]').click();
+await page.waitForTimeout(250);
+check(
+  'city chips pin a selection',
+  (await page.locator('[data-city-chip="Riga"]').getAttribute('aria-pressed')) === 'true' &&
+    /riga/i.test(await mapPanel.innerText()),
+);
+
+const noJsSpeakingCtx = await browser.newContext({ javaScriptEnabled: false });
+const noJsSpeaking = await noJsSpeakingCtx.newPage();
+await noJsSpeaking.goto(`${BASE}/speaking`, { waitUntil: 'domcontentloaded' });
+check(
+  'map and city list render without JavaScript',
+  (await noJsSpeaking.locator('.pin').count()) === pinCount &&
+    (await noJsSpeaking.locator('[data-city-chip]').count()) === pinCount,
+);
+await noJsSpeakingCtx.close();
 
 check('no console or page errors', errors.length === 0, errors.slice(0, 3).join(' | '));
 

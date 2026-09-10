@@ -12,8 +12,9 @@ export interface SearchEntry {
 const staticPages: SearchEntry[] = [
   { title: 'Home', href: '/', kind: 'Page' },
   { title: 'Writing & talks', href: '/writing', kind: 'Page' },
-  { title: 'Projects', href: '/projects', kind: 'Page' },
+  { title: 'Speaking', href: '/speaking', kind: 'Page' },
   { title: 'About', href: '/about', kind: 'Page' },
+  { title: 'Project archive', href: '/projects', kind: 'Page' },
   { title: 'Resume', href: '/download_src/Craig_Loewen_Resume.pdf', kind: 'Page', external: true },
 ];
 

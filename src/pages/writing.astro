@@ -21,7 +21,7 @@ const conferences = [...new Set(talks.map((t) => t.data.conference).filter(Boole
   <PageHeader
     kicker="writing & talks"
     title="Everything in one place"
-    lead={`${counts.Post + counts.Article} posts and articles, ${counts.Talk} talks and ${counts.Video} videos — from ${conferences.slice(0, 3).join(', ')} and beyond.`}
+    lead={`I write and speak about three things: how Linux and Windows end up on the same machine, what open source looks like from inside a large company, and how agents change the shape of developer tools. This is the full archive — ${counts.Post + counts.Article} posts and articles, ${counts.Talk} talks and ${counts.Video} videos, from ${conferences.slice(0, 3).join(', ')} and beyond.`}
   />
 
   <div class="mx-auto max-w-6xl px-5 py-16 sm:px-8 sm:py-20">

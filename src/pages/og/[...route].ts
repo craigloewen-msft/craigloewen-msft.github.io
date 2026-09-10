@@ -12,7 +12,14 @@ const pages: Record<string, { title: string; description?: string }> = {
     title: 'Writing & talks',
     description: 'Posts, articles, conference talks and videos.',
   },
-  projects: { title: "Things I've built", description: 'Selected projects by Craig Loewen.' },
+  speaking: {
+    title: 'Speaking',
+    description: 'Talks on Linux, developer tools, open source and AI.',
+  },
+  projects: {
+    title: 'Project archive',
+    description: 'Engineering projects from before Microsoft.',
+  },
   about: { title: 'About Craig Loewen', description: site.tagline },
 };
 

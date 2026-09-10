@@ -6,46 +6,45 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
 import Hero from '@/components/Hero.astro';
 import SectionHeading from '@/components/SectionHeading.astro';
 import StreamRow from '@/components/StreamRow.astro';
-import ProjectCard from '@/components/ProjectCard.astro';
 import ActionLink from '@/components/ActionLink.astro';
 import Prompt from '@/components/Prompt.astro';
 import Icon from '@/components/Icon.astro';
-import { now, socials } from '@/lib/site';
-import { getStream, countByKind } from '@/lib/stream';
+import { beliefs, now, socials } from '@/lib/site';
+import { work } from '@/lib/work';
+import { getStream } from '@/lib/stream';
+import { getSpeaking } from '@/lib/speaking';
 
 import konstanz from '@/assets/img/konstanz.jpg';
 import wallrobot from '@/assets/img/wallrobot.jpg';
 import climbing from '@/assets/img/climbing.jpg';
 
 const stream = await getStream();
-const counts = countByKind(stream);
-const recent = stream.slice(0, 7);
+const recent = stream.slice(0, 6);
 
-const allTalks = await getCollection('talks');
-const conferences = [...new Set(allTalks.map((t) => t.data.conference).filter(Boolean))];
-
-const projects = (await getCollection('projects')).sort((a, b) => a.data.order - b.data.order);
-const featured = projects.find((p) => p.data.featured);
-const rest = projects.filter((p) => !p.data.featured).slice(0, 3);
+const { stats } = await getSpeaking();
+const talks = await getCollection('talks');
+const conferences = [...new Set(talks.map((t) => t.data.conference).filter(Boolean))];
 
 const interests = [
   {
-    title: 'Travelling',
+    title: 'Elsewhere',
     image: konstanz,
     alt: 'Konstanz, Germany',
-    body: 'I love to travel and have lived in many different places. Most recently Konstanz, Germany, where I got to speak both German and French. Learning about new places and cultures is the fastest way I know to get a new perspective.',
-  },
-  {
-    title: 'Building',
-    image: wallrobot,
-    alt: 'A robot built from scratch',
-    body: 'I work on pet projects constantly. In 2014 I built a working quadcopter from scratch, programmed it, and learned to fly it. I have also built a hydrogen fuel cell powered RC car, and a robot that launches jelly beans into your mouth from across the room.',
+    body: "I'm South African and Canadian, and I've lived and worked in Africa, Europe and North America. I speak enough German, French and Korean to be useful in the places I keep getting invited back to. Working somewhere unfamiliar is still the fastest way I know to get a different read on a problem.",
   },
   {
     title: 'Training',
     image: climbing,
     alt: 'Craig climbing outdoors',
-    body: 'The other way I push myself is physically, and outdoors. Lifting, climbing, and getting far enough from a screen that the only thing left to solve is the next hold.',
+    body: 'Lifting and climbing. It is the one part of my week with a completely unambiguous success metric, which is a nice change from the day job.',
+  },
+  {
+    title: 'Making things',
+    image: wallrobot,
+    // TODO(craig): a photo of you playing guitar would suit this card better
+    // than the jelly-bean robot, if you have one.
+    alt: 'A robot built from scratch',
+    body: 'I still build things with no business case attached — guitars, robots, half-finished side projects. It keeps me honest about how it actually feels to use the tools I ask other people to use.',
   },
 ];
 ---
@@ -72,18 +71,71 @@ const interests = [
     </div>
   </section>
 
+  {/* What I own */}
+  <section id="work" class="mx-auto max-w-6xl px-5 py-16 sm:px-8 sm:py-20" data-reveal>
+    <SectionHeading kicker="work" title="What I own" />
+
+    <p class="mt-5 max-w-2xl text-(--text-muted)">
+      Three areas, one thesis: the machine in front of a developer should disappear. Everything
+      below links to something public — a release, a repository, or a session you can watch.
+    </p>
+
+    <div class="mt-10 space-y-5">
+      {work.map((area) => (
+        <article class="surface-card p-8 sm:p-10">
+          <div class="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-2">
+            <h3 class="text-2xl font-semibold sm:text-3xl">{area.name}</h3>
+            <p class="font-mono text-xs text-(--text-muted)">
+              {area.role} · {area.period}
+            </p>
+          </div>
+
+          <p class="mt-4 max-w-3xl text-(--text-secondary)">{area.summary}</p>
+
+          <ul class="mt-6 space-y-3">
+            {area.outcomes.map((outcome) => (
+              <li class="flex gap-3 text-sm text-(--text-muted)">
+                <Icon name="arrowRight" size={14} class="mt-1 shrink-0 text-(--tone-accent)" />
+                <span>{outcome}</span>
+              </li>
+            ))}
+          </ul>
+
+          <ul class="mt-7 flex flex-wrap gap-2">
+            {area.links.map((link) => (
+              <li>
+                <a
+                  href={link.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  data-analytics="work_link"
+                  class="group inline-flex items-center gap-1.5 rounded-lg border border-(--surface-border) px-3 py-1.5 font-mono text-xs text-(--text-muted) transition-colors hover:border-(--tone-accent) hover:text-(--tone-accent)"
+                >
+                  {link.label}
+                  <Icon name="arrowUpRight" size={12} class="opacity-60" />
+                </a>
+              </li>
+            ))}
+          </ul>
+        </article>
+      ))}
+    </div>
+  </section>
+
   {/* Writing & talks */}
   <section id="writing" class="mx-auto max-w-6xl px-5 py-16 sm:px-8 sm:py-20" data-reveal>
     <SectionHeading
       kicker="writing & talks"
-      title="Recent work"
+      title="Working in public"
       href="/writing"
       hrefLabel="See everything"
     />
 
     <p class="mt-5 max-w-2xl text-(--text-muted)">
-      {counts.Post + counts.Article} posts and articles, {counts.Talk} talks and {counts.Video}{' '}
-      videos, across {conferences.slice(0, 3).join(', ')} and the Microsoft developer blogs.
+      I write and speak about three things: how Linux and Windows end up on the same machine, what
+      open source looks like from inside a large company, and how agents change the shape of
+      developer tools. {stats.talks} talks so far, from {conferences.slice(0, 3).join(', ')} and
+      beyond, plus the Microsoft developer blogs.
     </p>
 
     <ul class="mt-10 divide-y divide-(--surface-border) border-y border-(--surface-border)">
@@ -95,48 +147,20 @@ const interests = [
     </ul>
   </section>
 
-  {/* Projects */}
-  <section id="projects" class="mx-auto max-w-6xl px-5 py-16 sm:px-8 sm:py-20" data-reveal>
-    <SectionHeading kicker="projects" title="Things I've built" href="/projects" />
+  {/* Beliefs */}
+  <section id="beliefs" class="mx-auto max-w-6xl px-5 py-16 sm:px-8 sm:py-20" data-reveal>
+    <SectionHeading kicker="opinions" title="How I think about developer tools" />
 
-    {featured && (
-      <a
-        href={`/projects/${featured.id}`}
-        class="surface-card surface-card-hover group mt-10 grid overflow-hidden md:grid-cols-2"
-      >
-        <div class="order-2 flex flex-col justify-center p-8 sm:p-10 md:order-1">
-          <span class="kicker">Featured</span>
-          <h3 class="mt-3 text-2xl font-semibold transition-colors group-hover:text-(--tone-accent) sm:text-3xl">
-            {featured.data.name}
-          </h3>
-          <p class="mt-3 text-(--text-muted)">{featured.data.tagline}</p>
-          <span class="mt-6 inline-flex items-center gap-1.5 font-mono text-xs text-(--tone-accent)">
-            View project
-            <Icon
-              name="arrowRight"
-              size={14}
-              class="transition-transform duration-300 group-hover:translate-x-1"
-            />
+    <ol class="mt-10 grid gap-px overflow-hidden rounded-xl border border-(--surface-border) bg-(--surface-border) sm:grid-cols-2">
+      {beliefs.map((belief, i) => (
+        <li class="flex gap-4 bg-(--surface-raised) p-7">
+          <span class="font-mono text-xs text-(--text-muted)">
+            {String(i + 1).padStart(2, '0')}
           </span>
-        </div>
-        <div class="order-1 aspect-16/10 overflow-hidden md:order-2 md:aspect-auto">
-          <Image
-            src={featured.data.cover}
-            alt={featured.data.coverAlt}
-            width={900}
-            height={640}
-            loading="lazy"
-            class="size-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
-          />
-        </div>
-      </a>
-    )}
-
-    <div class="mt-5 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-      {rest.map((project) => (
-        <ProjectCard project={project} />
+          <p class="text-(--text-secondary)">{belief}</p>
+        </li>
       ))}
-    </div>
+    </ol>
   </section>
 
   {/* When I'm not working */}
@@ -181,8 +205,10 @@ const interests = [
 
       <Prompt label="say hello" cursor />
       <h2 class="mt-4 text-3xl font-semibold sm:text-4xl">Get in touch</h2>
-      <p class="mx-auto mt-4 max-w-md text-(--text-muted)">
-        I'm always happy to talk about developer tools, Linux on Windows, or what you're building.
+      <p class="mx-auto mt-4 max-w-lg text-(--text-muted)">
+        Speaking at your event, running open source inside a big company, or where developer tools
+        go next — I'm glad to talk about any of it. I also answer short questions from product
+        managers earlier in their careers. Email is the surest way to reach me.
       </p>
 
       <div class="mt-8 flex flex-wrap justify-center gap-3">

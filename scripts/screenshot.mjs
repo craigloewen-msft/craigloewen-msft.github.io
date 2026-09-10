@@ -7,6 +7,7 @@ const OUT = process.env.OUT ?? 'screenshots';
 const shots = [
   { name: 'home', path: '/', full: true },
   { name: 'writing', path: '/writing', full: true },
+  { name: 'speaking', path: '/speaking', full: true },
   { name: 'projects', path: '/projects', full: true },
   { name: 'about', path: '/about', full: true },
   { name: 'post', path: '/blog/2026/08/28/kingdom-ide/', full: true },
@@ -17,6 +18,7 @@ const shots = [
   },
   { name: 'project-detail', path: '/projects/watvision', full: true },
   { name: 'home-mobile', path: '/', full: true, width: 390, height: 844 },
+  { name: 'speaking-mobile', path: '/speaking', full: true, width: 390, height: 844 },
   { name: 'writing-mobile', path: '/writing', full: true, width: 390, height: 844 },
   { name: '404', path: '/does-not-exist', full: false },
 ];
@@ -39,6 +41,17 @@ for (const shot of shots) {
   await page.evaluate(() => {
     document.querySelectorAll('[data-reveal]').forEach((el) => el.classList.add('is-revealed'));
   });
+
+  // Walk the page so lazy-loaded images below the fold actually resolve.
+  await page.evaluate(async () => {
+    const step = window.innerHeight;
+    for (let y = 0; y < document.body.scrollHeight; y += step) {
+      window.scrollTo(0, y);
+      await new Promise((resolve) => setTimeout(resolve, 120));
+    }
+    window.scrollTo(0, 0);
+  });
+  await page.waitForLoadState('networkidle');
   await page.waitForTimeout(600);
 
   await page.screenshot({ path: `${OUT}/${shot.name}.png`, fullPage: shot.full });

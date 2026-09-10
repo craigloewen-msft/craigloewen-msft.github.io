@@ -1,9 +1,26 @@
 ---
 import { Image } from 'astro:assets';
 import { site, socials } from '@/lib/site';
+import { getSpeaking } from '@/lib/speaking';
 import ActionLink from './ActionLink.astro';
 import Icon from './Icon.astro';
-import portrait from '@/assets/img/WaterlooPhoto.jpg';
+
+/*
+ * TODO(craig): swap this for a current photo when you have one. Best options, in
+ * order: a recent Build or Ignite stage shot at 3:2 or wider, or a proper
+ * headshot. This one is Ubuntu Summit 2023 — good, but the slide behind you
+ * still reads "Senior Product Manager".
+ */
+import portrait from '@/assets/img/wsltalk.jpg';
+
+const { stats } = await getSpeaking();
+
+const proof = [
+  { value: '5M+', label: 'developers use WSL' },
+  { value: '2018', label: 'leading it since' },
+  { value: String(stats.talks), label: 'conference talks' },
+  { value: String(stats.countries), label: 'countries spoken in' },
+];
 ---
 
 <section class="grain relative overflow-hidden">
@@ -20,12 +37,13 @@ import portrait from '@/assets/img/WaterlooPhoto.jpg';
     ></div>
   </div>
 
-  <div class="mx-auto max-w-6xl px-5 pt-32 pb-20 sm:px-8 sm:pt-40 sm:pb-28">
-    <div class="grid items-center gap-12 lg:grid-cols-[1.15fr_0.85fr] lg:gap-16">
+  <div class="mx-auto max-w-6xl px-5 pt-32 pb-8 sm:px-8 sm:pt-40 sm:pb-10">
+    <div class="grid items-center gap-12 lg:grid-cols-[1.05fr_0.95fr] lg:gap-14">
       <div>
         <p class="flex items-center gap-1.5 font-mono text-xs tracking-[0.14em] uppercase">
           <span aria-hidden="true" style="color: var(--tone-accent)">
-            ~$
+            {' '}
+            ~${' '}
           </span>
           <span class="text-(--text-muted)">whoami</span>
           <span
@@ -40,24 +58,25 @@ import portrait from '@/assets/img/WaterlooPhoto.jpg';
         </h1>
 
         <p class="mt-5 max-w-xl text-lg text-(--text-secondary) sm:text-xl">
-          I build developer tools at Microsoft — currently the{' '}
-          <span class="text-(--text-primary)">Windows Subsystem for Linux</span>, now fully open
-          source.
+          Principal Product Manager at Microsoft. I own the{' '}
+          <span class="text-(--text-primary)">Windows Subsystem for Linux</span> — how millions of
+          developers run Linux on Windows — and parts of the Windows developer experience.
         </p>
 
         <p class="mt-4 max-w-xl text-(--text-muted)">
-          Mechatronics engineer turned product manager. I’m passionate about building tools that get
-          out of the way and let people focus on what they’re trying to create. I’m lucky enough to
-          spend my time building those things, talking to the people who use them, and occasionally
-          sharing what we’ve learned on stage.
+          I've spent eight years on one problem: getting the machine in front of a developer out of
+          their way. That has meant rebuilding WSL on a real Linux kernel, taking it into the
+          enterprise, and in 2025 opening the whole thing up as open source. Now it means working
+          out what all of that becomes with an agent in the loop.
         </p>
 
-        <div class="mt-8 flex flex-col items-start gap-3">
+        <div class="mt-8 flex flex-wrap items-center gap-3">
           <ActionLink href={site.resume} icon="document" analytics="see_resume" external>
             Resume
           </ActionLink>
-          <ActionLink href="/writing" variant="ghost" icon="pen">
-            See my writings &amp; talks
+          <ActionLink href="/speaking" variant="ghost" icon="mic">
+            {' '}
+            What I speak about{' '}
           </ActionLink>
         </div>
 
@@ -79,7 +98,7 @@ import portrait from '@/assets/img/WaterlooPhoto.jpg';
         </ul>
       </div>
 
-      <div class="relative mx-auto w-full max-w-sm lg:max-w-none">
+      <figure class="relative mx-auto w-full max-w-xl lg:max-w-none">
         <div
           class="absolute -inset-3 -z-10 rounded-2xl blur-2xl"
           style="background: var(--glow-accent)"
@@ -87,14 +106,32 @@ import portrait from '@/assets/img/WaterlooPhoto.jpg';
         ></div>
         <Image
           src={portrait}
-          alt="Craig Loewen"
-          width={720}
+          alt="Craig Loewen presenting a talk about WSL on stage at Ubuntu Summit 2023"
+          width={1200}
           height={900}
           loading="eager"
           fetchpriority="high"
-          class="w-full rounded-2xl border border-(--surface-border) object-cover shadow-2xl"
+          class="aspect-4/3 w-full rounded-2xl border border-(--surface-border) object-cover object-[54%_center] shadow-2xl"
         />
-      </div>
+        <figcaption class="mt-3 font-mono text-xs text-(--text-muted)">
+          Ubuntu Summit 2023 · Riga, Latvia
+        </figcaption>
+      </figure>
     </div>
+
+    {/* Publicly verifiable claims only — no internal numbers. */}
+    <dl class="mt-16 grid grid-cols-2 gap-px overflow-hidden rounded-xl border border-(--surface-border) bg-(--surface-border) sm:grid-cols-4">
+      {proof.map((item) => (
+        <div class="bg-(--surface-raised) px-5 py-6">
+          <dt class="sr-only">{item.label}</dt>
+          <dd>
+            <span class="block text-3xl font-semibold" style="color: var(--tone-accent)">
+              {item.value}
+            </span>
+            <span class="mt-1 block text-sm text-(--text-muted)">{item.label}</span>
+          </dd>
+        </div>
+      ))}
+    </dl>
   </div>
 </section>

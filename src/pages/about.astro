@@ -6,60 +6,77 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
 import PageHeader from '@/components/PageHeader.astro';
 import ActionLink from '@/components/ActionLink.astro';
 import SectionHeading from '@/components/SectionHeading.astro';
-import { site, socials } from '@/lib/site';
+import Icon from '@/components/Icon.astro';
+import { bio, site, socials } from '@/lib/site';
+import { getSpeaking } from '@/lib/speaking';
 
-import portrait from '@/assets/img/WaterlooPhoto.jpg';
-import wsltalk from '@/assets/img/wsltalk.jpg';
-import panel from '@/assets/img/panel.jpg';
-import developerTalk from '@/assets/img/developer-talk.jpg';
+/*
+ * TODO(craig): this is the one place a proper headshot would earn its keep —
+ * a plain, current, well-lit portrait. The stage shots carry the rest of the site.
+ */
+import portrait from '@/assets/img/wsltalk.jpg';
 
-const talks = await getCollection('talks');
+const { stats } = await getSpeaking();
+const projects = await getCollection('projects');
 
-const stage = [
-  { image: wsltalk, alt: 'Craig giving a talk about WSL' },
-  { image: panel, alt: 'Craig speaking on a panel' },
-  { image: developerTalk, alt: 'Craig presenting to developers' },
+/** The career in the order it happened, kept to one line each. */
+const timeline = [
+  {
+    period: '2018 — present',
+    title: 'Principal Product Manager, Microsoft',
+    body: 'Product owner for the Windows Subsystem for Linux, and parts of the Windows developer experience. Through a rewrite onto a real Linux kernel, into the enterprise, and out into the open as open source.',
+  },
+  {
+    period: '2017',
+    title: 'Product Manager intern, Microsoft',
+    body: 'Windows Console. Wrote the specs for six features, and changed the operating system default console colours — which turned out to be the first thing I shipped that The Verge wrote about.',
+  },
+  {
+    period: '2013 — 2018',
+    title: 'Mechatronics Engineering, University of Waterloo',
+    body: 'Co-operative programme with a management sciences option. Graduated first in a class of 110, with work terms at General Motors and at Siemens in Germany.',
+  },
 ];
 ---
 
-<BaseLayout
-  title="About"
-  description="Craig Loewen is a Product Manager at Microsoft working on the Windows Subsystem for Linux, and a Mechatronics Engineering graduate from the University of Waterloo."
-  path="/about"
-  image="/og/about.png"
->
+<BaseLayout title="About" description={bio.short} path="/about" image="/og/about.png">
   <PageHeader kicker="about" title="About me" />
 
   <div class="mx-auto max-w-6xl px-5 py-16 sm:px-8 sm:py-20">
     <div class="grid gap-12 lg:grid-cols-[1.3fr_0.7fr] lg:gap-16">
       <div class="space-y-5 text-lg text-(--text-secondary)">
         <p>
-          My name's Craig Loewen. I'm a Product Manager at Microsoft, and before that I studied
-          Mechatronics Engineering at the University of Waterloo.
+          I'm a Principal Product Manager at Microsoft. I own the Windows Subsystem for Linux — how
+          millions of developers run Linux on Windows — along with parts of the Windows developer
+          experience.
         </p>
         <p>
-          I pride myself on being a cross-discipline problem solver. I've worked across a wide range
-          of industries, from automotive to software, and across a wide range of skills, from
-          development to management. I enjoy designing, creating, and leaving things better than I
-          found them.
+          I've spent eight years on essentially one problem, which is unusual for a product manager
+          and is the thing I'd most defend about my career. Depth is what let me argue for the
+          expensive decisions: rebuilding WSL on a real Linux kernel rather than emulating one,
+          treating enterprise controls as a feature rather than a tax, and eventually making the
+          case that the whole thing should be open source.
         </p>
         <p>
-          These days most of my time goes to the{' '}
-          <strong class="text-(--text-primary)">Windows Subsystem for Linux</strong>, which is now
-          fully open source, and to the broader question of what developer tools should look like in
-          a world with capable coding agents.
+          Most of what I do now doesn't ship with my name on it. It's the strategy documents, the
+          reviews, and the shared vocabulary that let a dozen teams make consistent decisions
+          without me in the room. I'm most useful on the problems that are ambiguous, cross-team,
+          and politically expensive — and I care about growing the people doing that work as much as
+          the products they're building.
         </p>
         <p>
-          I'm a South African Canadian, and I've lived in Europe, Africa and Canada. Outside work
-          you'll find me weight lifting, playing guitar, or hiking.
+          I trained as a mechatronics engineer, which is why I still build the prototype when
+          arguing about it would take longer. I'm South African and Canadian, I've lived in Africa,
+          Europe and North America, and I speak enough German, French and Korean to get into trouble
+          in each.
         </p>
 
         <div class="flex flex-wrap gap-3 pt-4">
           <ActionLink href={site.resume} icon="document" analytics="see_resume" external>
-            Download my resume
+            Resume
           </ActionLink>
-          <ActionLink href="/writing" variant="ghost" icon="mic">
-            {talks.length} talks
+          <ActionLink href="/speaking" variant="ghost" icon="mic">
+            {stats.talks} talks in {stats.countries} countries
           </ActionLink>
         </div>
       </div>
@@ -67,36 +84,74 @@ const stage = [
       <div>
         <Image
           src={portrait}
-          alt="Craig Loewen"
-          width={640}
-          height={800}
+          alt="Craig Loewen presenting on stage"
+          width={720}
+          height={720}
           loading="eager"
-          class="w-full rounded-2xl border border-(--surface-border) object-cover"
+          class="aspect-square w-full rounded-2xl border border-(--surface-border) object-cover object-[54%_center]"
         />
       </div>
     </div>
 
+    {/* Career */}
     <section class="mt-24" data-reveal>
-      <SectionHeading
-        kicker="on stage"
-        title="Out in the world"
-        href="/writing"
-        hrefLabel="All talks"
-      />
-      <div class="mt-10 grid gap-5 sm:grid-cols-3">
-        {stage.map((shot) => (
-          <Image
-            src={shot.image}
-            alt={shot.alt}
-            width={560}
-            height={380}
-            loading="lazy"
-            class="aspect-4/3 w-full rounded-xl border border-(--surface-border) object-cover"
-          />
+      <SectionHeading kicker="background" title="How I got here" />
+
+      <ol class="mt-10 border-l border-(--surface-border)">
+        {timeline.map((entry) => (
+          <li class="relative pb-10 pl-8 last:pb-0">
+            <span
+              aria-hidden="true"
+              class="absolute top-2 -left-[4.5px] size-2 rounded-full"
+              style="background: var(--tone-accent)"
+            />
+            <p class="font-mono text-xs text-(--text-muted)">{entry.period}</p>
+            <h3 class="mt-2 text-lg font-semibold">{entry.title}</h3>
+            <p class="mt-2 max-w-2xl text-(--text-muted)">{entry.body}</p>
+          </li>
         ))}
+      </ol>
+    </section>
+
+    {/* Press kit */}
+    <section class="mt-24" data-reveal>
+      <SectionHeading kicker="press kit" title="If you need a bio" />
+      <div class="surface-card mt-8 p-8">
+        <p class="text-(--text-secondary)">{bio.long}</p>
+        <div class="mt-7 flex flex-wrap gap-3">
+          <ActionLink href="/speaking" variant="ghost" icon="mic">
+            Speaking and booking
+          </ActionLink>
+          <ActionLink href={site.resume} variant="ghost" icon="document" external>
+            Resume
+          </ActionLink>
+        </div>
       </div>
     </section>
 
+    {/* Archive */}
+    <section class="mt-24" data-reveal>
+      <SectionHeading kicker="archive" title="Before all this" />
+      <p class="mt-5 max-w-2xl text-(--text-muted)">
+        {projects.length} engineering projects from university and my work terms — an award-winning
+        accessibility device, a quadcopter, a neural network that learned to play a phone game, and
+        a couple of production lines. None of it is what I do now, but it's how I learned to build,
+        and I'd rather keep it than pretend it didn't happen.
+      </p>
+      <a
+        href="/projects"
+        class="group mt-6 inline-flex items-center gap-1.5 font-mono text-sm text-(--text-muted) transition-colors hover:text-(--tone-accent)"
+      >
+        Browse the archive
+        <Icon
+          name="arrowRight"
+          size={16}
+          class="transition-transform duration-300 group-hover:translate-x-1"
+        />
+      </a>
+    </section>
+
+    {/* Contact */}
     <section class="mt-24" data-reveal>
       <SectionHeading kicker="contact" title="Find me elsewhere" />
       <div class="mt-8 flex flex-wrap gap-3">

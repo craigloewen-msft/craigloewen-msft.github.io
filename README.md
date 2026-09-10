@@ -1,6 +1,6 @@
 # craigloewen.com
 
-My personal site — writing, talks and projects. Built with [Astro](https://astro.build),
+My personal site — writing, talks and what I work on. Built with [Astro](https://astro.build),
 [Vue](https://vuejs.org) islands and [Tailwind CSS](https://tailwindcss.com), deployed to
 GitHub Pages.
 
@@ -26,10 +26,10 @@ npm run dev      # http://localhost:4321
 src/
   assets/img/       images optimised at build time by astro:assets
   components/       .astro components, plus one Vue island
-  content/          writing/ and projects/ (Markdown + MDX)
+  content/          writing/ and projects/ (Markdown + MDX; projects are an archive)
   data/             talks, videos and external posts (YAML)
   layouts/          BaseLayout — head, header/footer
-  lib/              site config, URL helpers, content stream, search index
+  lib/              site config and copy, current work, speaking map data, stream, search
   pages/            file-based routes
   styles/global.css the whole design system (Tailwind v4 @theme tokens)
 public/             served as-is: CNAME, resume, legacy /img paths
@@ -62,6 +62,35 @@ Post URLs keep the original Jekyll shape — `/blog/:year/:month/:day/:slug/` �
 ever shared still resolves. `src/pages/blog/[year]/[month]/[day]/[slug].astro` reconstructs
 that path from frontmatter; don't change it without a redirect plan.
 
+### What the homepage leads with
+
+`src/lib/site.ts` is the single source of truth for voice: tagline, short and long bio (the
+press kit reused on `/speaking`), the "Now" list, and the beliefs shown on the homepage. Edit
+copy there before editing pages.
+
+`src/lib/work.ts` holds the current product areas — the homepage's "What I own" section. It
+replaced the old projects grid, which was all pre-2018 university work. Those projects still
+live at `/projects` as an archive, linked from `/about`; the URLs and the content collection
+are unchanged, they are just no longer the headline.
+
+### Speaking
+
+`/speaking` is built from the same `src/data/talks.yml` as the stream. `src/lib/speaking.ts`
+maps each talk's `location` to coordinates via a `PLACES` table and aggregates them by city.
+**When you add a talk in a city that isn't in `PLACES`, add it there too** — otherwise the
+talk silently counts as "online" and gets no marker.
+
+`SpeakingMap.astro` renders those cities onto an SVG world map. The map geometry in
+`src/lib/world-map.ts` is generated, not hand-written, and has no runtime dependency: it was
+produced once from [world-atlas](https://github.com/topojson/world-atlas) (Natural Earth
+110m land, public domain) by reprojecting to an equirectangular window, clipping to the
+viewport and simplifying the coastlines, then committed as a single 15 KB path. The file
+header documents how to regenerate it. Longitudes must be unwrapped before clipping or Fiji
+and Eurasia draw stray lines across the whole map.
+
+The markers, chips and detail panel are server-rendered; the script only adds
+hover/focus/click behaviour, so the map and city list still work with JavaScript off.
+
 ### Design
 
 Dark only. Colours, type and spacing are defined once as `@theme` tokens in
@@ -73,7 +102,7 @@ Social cards are generated at build time by `src/pages/og/[...route].ts`.
 
 ```bash
 npm run build && npm run preview          # then, in another shell:
-node scripts/interaction-check.mjs        # keyboard, palette, stream and a11y assertions
+node scripts/interaction-check.mjs        # keyboard, palette, stream, map and a11y assertions
 OUT=/tmp/shots node scripts/screenshot.mjs # visual snapshots across pages
 ```
 
