@@ -71,6 +71,24 @@ items, three photos, contact — and anything that wants more room belongs on `/
 `src/lib/site.ts` is the single source of truth for voice: tagline, short and long bio (the
 press kit on `/about`), the "Now" list, and the beliefs. Edit copy there before editing pages.
 
+**No count is typed into a page.** Talk, city, country, post and project totals all come from
+the content collections at build time, and anything phrased as "N years" is derived from the
+career start date via `yearsSince()` in `src/lib/site.ts` (`spellOut()` renders it as a word
+for running prose). A rebuild is all it takes to make the site current; there is no number to
+remember to bump.
+
+Photos are used exactly once each — a face on `/about`, a wide stage shot in the hero, and
+three different speaking formats in the `/writing` gallery. Reusing one across two slots is
+noticeable, so check before adding.
+
+### Video
+
+`VideoEmbed.astro` is a click-to-load facade: it renders a local poster frame and only injects
+the YouTube iframe once someone presses play, which keeps the player's payload and cookies off
+the page for everyone who doesn't. Without JavaScript it stays a plain link to YouTube. Poster
+frames are committed to `src/assets/img/` rather than hotlinked from `i.ytimg.com`, so the page
+makes no third-party request until it's asked to.
+
 `src/lib/work.ts` holds the current product areas — the "What I work on" section of `/about`.
 It replaced a grid of pre-2018 university projects that used to lead the homepage. Those
 projects still live at `/projects` as an archive linked from `/about`; the URLs and the

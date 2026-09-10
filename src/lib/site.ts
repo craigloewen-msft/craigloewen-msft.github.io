@@ -9,6 +9,43 @@ export const site = {
   resume: '/download_src/Craig_Loewen_Resume.pdf',
 } as const;
 
+/** Started at Microsoft in August 2018, per the résumé. */
+const CAREER_START = { year: 2018, month: 8 };
+
+/**
+ * Whole years elapsed since a start date. Prose that says "N years on one
+ * problem" reads as stale the moment it's wrong, and it always eventually is —
+ * so it's derived at build time rather than typed into a page.
+ */
+export function yearsSince(
+  start: { year: number; month: number } = CAREER_START,
+  now: Date = new Date(),
+): number {
+  const months = (now.getFullYear() - start.year) * 12 + (now.getMonth() + 1 - start.month);
+  return Math.floor(months / 12);
+}
+
+const NUMBER_WORDS = [
+  'zero',
+  'one',
+  'two',
+  'three',
+  'four',
+  'five',
+  'six',
+  'seven',
+  'eight',
+  'nine',
+  'ten',
+  'eleven',
+  'twelve',
+];
+
+/** Spelled-out form for running prose; falls back to digits past twelve. */
+export function spellOut(n: number): string {
+  return NUMBER_WORDS[n] ?? String(n);
+}
+
 /**
  * The reusable third-person bio, for conference programmes and podcast hosts.
  * Kept here so the /about press kit and the site description can't drift apart.

@@ -1,0 +1,84 @@
+---
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+import Icon from './Icon.astro';
+
+interface Props {
+  /** YouTube video id, e.g. the `9AbamDR33lc` in a watch?v= URL. */
+  id: string;
+  title: string;
+  /** Local poster frame, so nothing is requested from YouTube until play. */
+  poster: ImageMetadata;
+  posterAlt: string;
+  class?: string;
+}
+
+const { id, title, poster, posterAlt, class: className = '' } = Astro.props;
+
+const watchUrl = `https://www.youtube.com/watch?v=${id}`;
+---
+
+{/*
+ * Click-to-load facade. The iframe is only injected on activation, which keeps
+ * YouTube's ~500 KB player and its cookies off the page for everyone who never
+ * presses play. Without JavaScript this degrades to a plain link to YouTube.
+ */}
+<div class={`video-embed relative overflow-hidden ${className}`} data-video-id={id}>
+  <a
+    href={watchUrl}
+    target="_blank"
+    rel="noopener noreferrer"
+    data-video-trigger
+    data-analytics="play_video"
+    aria-label={`Play “${title}” on YouTube`}
+    class="group block size-full focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-(--tone-accent)"
+  >
+    <Image
+      src={poster}
+      alt={posterAlt}
+      width={960}
+      height={519}
+      loading="lazy"
+      class="size-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+    />
+
+    <span class="absolute inset-0 flex items-center justify-center bg-black/25 transition-colors group-hover:bg-black/10">
+      <span class="flex size-16 items-center justify-center rounded-full border border-white/25 bg-black/55 backdrop-blur-sm transition-transform duration-300 group-hover:scale-110">
+        <Icon name="play" size={22} class="translate-x-px text-white" />
+      </span>
+    </span>
+  </a>
+</div>
+
+<script>
+  function initVideoEmbeds() {
+    document.querySelectorAll<HTMLElement>('.video-embed').forEach((embed) => {
+      if (embed.dataset.videoReady) return;
+      embed.dataset.videoReady = 'true';
+
+      const trigger = embed.querySelector<HTMLAnchorElement>('[data-video-trigger]');
+      const id = embed.dataset.videoId;
+      if (!trigger || !id) return;
+
+      trigger.addEventListener('click', (event) => {
+        // Let modified clicks (new tab, etc.) fall through to the YouTube link.
+        if (event.metaKey || event.ctrlKey || event.shiftKey || event.button !== 0) return;
+        event.preventDefault();
+
+        const frame = document.createElement('iframe');
+        frame.src = `https://www.youtube-nocookie.com/embed/${id}?autoplay=1&rel=0`;
+        frame.title = trigger.getAttribute('aria-label') ?? 'Video';
+        frame.allow =
+          'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
+        frame.allowFullscreen = true;
+        frame.className = 'size-full';
+        frame.setAttribute('frameborder', '0');
+
+        embed.replaceChildren(frame);
+      });
+    });
+  }
+
+  initVideoEmbeds();
+  document.addEventListener('astro:page-load', initVideoEmbeds);
+</script>

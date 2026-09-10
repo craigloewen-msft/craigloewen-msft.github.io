@@ -7,18 +7,20 @@ import PageHeader from '@/components/PageHeader.astro';
 import ActionLink from '@/components/ActionLink.astro';
 import SectionHeading from '@/components/SectionHeading.astro';
 import Icon from '@/components/Icon.astro';
-import { beliefs, bio, site, socials } from '@/lib/site';
+import { beliefs, bio, site, socials, spellOut, yearsSince } from '@/lib/site';
 import { work } from '@/lib/work';
 import { getSpeaking } from '@/lib/speaking';
 
 /*
- * TODO(craig): this is the one place a proper headshot would earn its keep —
- * a plain, current, well-lit portrait. The stage shots carry the rest of the site.
+ * The closest thing to a headshot in the set — face large, lit and front-on, so
+ * it survives the square crop. Every other photo on the site is used once, and
+ * the wider Ubuntu Summit shots carry the homepage and the talk gallery.
  */
-import portrait from '@/assets/img/wsltalk.jpg';
+import portrait from '@/assets/img/speaking-closeup.jpg';
 
 const { stats } = await getSpeaking();
 const projects = await getCollection('projects');
+const years = spellOut(yearsSince());
 
 /** The career in the order it happened. */
 const timeline = [
@@ -81,9 +83,9 @@ const recognition = [
           experience.
         </p>
         <p>
-          I've spent eight years on essentially one problem, which is unusual for a product manager
-          and is the thing I'd most defend about my career. Depth is what let me argue for the
-          expensive decisions: rebuilding WSL on a real Linux kernel rather than emulating one,
+          I've spent {years} years on essentially one problem, which is unusual for a product
+          manager and is the thing I'd most defend about my career. Depth is what let me argue for
+          the expensive decisions: rebuilding WSL on a real Linux kernel rather than emulating one,
           treating enterprise controls as a feature rather than a tax, and eventually making the
           case that the whole thing should be open source.
         </p>
@@ -112,11 +114,11 @@ const recognition = [
       <div>
         <Image
           src={portrait}
-          alt="Craig Loewen presenting on stage"
+          alt="Craig Loewen speaking at a lectern"
           width={720}
           height={720}
           loading="eager"
-          class="aspect-square w-full rounded-2xl border border-(--surface-border) object-cover object-[54%_center]"
+          class="aspect-square w-full rounded-2xl border border-(--surface-border) object-cover"
         />
       </div>
     </div>

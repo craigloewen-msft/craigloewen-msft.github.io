@@ -342,6 +342,48 @@ check(
 );
 await noJsSpeakingCtx.close();
 
+// ---------- Guitar video facade ----------
+await page.goto(`${BASE}/`, { waitUntil: 'networkidle' });
+await page.locator('#beyond').scrollIntoViewIfNeeded();
+await page.waitForTimeout(800);
+
+const thirdParty = [];
+page.on('request', (r) => {
+  if (/youtube|ytimg/.test(r.url())) thirdParty.push(r.url());
+});
+
+check(
+  'video shows a local poster, not a YouTube request',
+  thirdParty.length === 0 && (await page.locator('.video-embed img').count()) === 1,
+  `${thirdParty.length} third-party requests`,
+);
+check(
+  'offline photos all load',
+  (await page.$$eval('#beyond img', (els) =>
+    els.every((e) => e.complete && e.naturalWidth > 0),
+  )) === true,
+);
+
+await page.locator('[data-video-trigger]').click();
+await page.waitForTimeout(1200);
+const embedded = await page.locator('.video-embed iframe').getAttribute('src');
+check(
+  'clicking play swaps in the privacy-mode player',
+  (embedded ?? '').startsWith('https://www.youtube-nocookie.com/embed/'),
+  embedded ?? 'no iframe',
+);
+
+const noJsVideoCtx = await browser.newContext({ javaScriptEnabled: false });
+const noJsVideo = await noJsVideoCtx.newPage();
+await noJsVideo.goto(`${BASE}/`, { waitUntil: 'domcontentloaded' });
+check(
+  'video degrades to a YouTube link without JavaScript',
+  /youtube\.com\/watch\?v=/.test(
+    (await noJsVideo.locator('[data-video-trigger]').getAttribute('href')) ?? '',
+  ),
+);
+await noJsVideoCtx.close();
+
 check('no console or page errors', errors.length === 0, errors.slice(0, 3).join(' | '));
 
 await browser.close();

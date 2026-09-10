@@ -13,7 +13,7 @@ import { getStream, countByKind } from '@/lib/stream';
 import { getSpeaking } from '@/lib/speaking';
 
 import panel from '@/assets/img/panel.jpg';
-import buildDemo from '@/assets/img/build-2024-ai-demo.jpg';
+import talkPortrait from '@/assets/img/talk-portrait.jpg';
 import conferenceTalk from '@/assets/img/conferencetalk.jpg';
 
 const items = await getStream();
@@ -24,9 +24,10 @@ const { cities, stats } = await getSpeaking();
 const talks = await getCollection('talks');
 const conferences = [...new Set(talks.map((t) => t.data.conference).filter(Boolean))];
 
+/* One photo per format — a panel, a solo talk, and a big room. */
 const gallery = [
   { image: panel, alt: 'Craig speaking on an AI panel at Ubuntu Summit' },
-  { image: buildDemo, alt: 'Craig running a live demo on stage at Microsoft Build 2024' },
+  { image: talkPortrait, alt: 'Craig presenting on stage at Ubuntu Summit 2023' },
   { image: conferenceTalk, alt: 'Craig presenting a WSL session at Developer Week' },
 ];
 ---

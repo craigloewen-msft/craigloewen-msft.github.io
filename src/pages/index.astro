@@ -7,12 +7,13 @@ import SectionHeading from '@/components/SectionHeading.astro';
 import StreamRow from '@/components/StreamRow.astro';
 import ActionLink from '@/components/ActionLink.astro';
 import Prompt from '@/components/Prompt.astro';
+import VideoEmbed from '@/components/VideoEmbed.astro';
 import { now, socials } from '@/lib/site';
 import { getStream } from '@/lib/stream';
 
 import konstanz from '@/assets/img/konstanz.jpg';
-import wallrobot from '@/assets/img/wallrobot.jpg';
 import climbing from '@/assets/img/climbing.jpg';
+import guitarCover from '@/assets/img/guitar-cover.jpg';
 
 const stream = await getStream();
 const recent = stream.slice(0, 6);
@@ -29,14 +30,6 @@ const interests = [
     image: climbing,
     alt: 'Craig climbing outdoors',
     body: 'Lifting and climbing — the one part of my week with a completely unambiguous success metric.',
-  },
-  {
-    title: 'Making things',
-    image: wallrobot,
-    // TODO(craig): a photo of you playing guitar would suit this card better
-    // than the jelly-bean robot, if you have one.
-    alt: 'A robot built from scratch',
-    body: 'Guitars, robots, half-finished side projects. It keeps me honest about how the tools actually feel to use.',
   },
 ];
 ---
@@ -86,14 +79,36 @@ const interests = [
     <SectionHeading kicker="offline" title="When I'm not working" />
 
     <div class="mt-10 grid gap-5 md:grid-cols-3">
+      <article class="surface-card overflow-hidden">
+        <VideoEmbed
+          id="9AbamDR33lc"
+          title="Master of Puppets - Metallica (Guitar Cover)"
+          poster={guitarCover}
+          posterAlt="Craig playing an electric guitar in his living room"
+          class="aspect-video border-b border-(--surface-border)"
+        />
+        <div class="p-6">
+          <h3
+            class="font-mono text-sm tracking-[0.14em] uppercase"
+            style="color: var(--tone-accent)"
+          >
+            Playing
+          </h3>
+          <p class="mt-3 text-sm text-(--text-muted)">
+            Guitar, loudly. This one is Master of Puppets. I still make things with no business case
+            attached, which keeps me honest about how tools actually feel to use.
+          </p>
+        </div>
+      </article>
+
       {interests.map((interest) => (
         <article class="surface-card overflow-hidden">
-          <div class="aspect-4/3 overflow-hidden border-b border-(--surface-border)">
+          <div class="aspect-video overflow-hidden border-b border-(--surface-border)">
             <Image
               src={interest.image}
               alt={interest.alt}
-              width={560}
-              height={420}
+              width={640}
+              height={360}
               loading="lazy"
               class="size-full object-cover"
             />
