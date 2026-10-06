@@ -1,3 +1,11 @@
+- title: (Reviewer) WSL containers is now generally available
+  url: https://blogs.windows.com/windowsdeveloper/2026/09/29/wsl-containers-now-generally-available/
+  date: 2026-09-29
+
+- title: (Reviewer) WSLC Architecture deep dive
+  url: https://devblogs.microsoft.com/commandline/wslc-architecture-deep-dive/
+  date: 2026-09-29
+
 - title: WSL container is now available for public preview
   url: https://devblogs.microsoft.com/commandline/wsl-container-is-now-available-for-public-preview/
   date: 2026-06-29
